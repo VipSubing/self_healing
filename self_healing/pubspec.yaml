@@ -1,0 +1,41 @@
+name: self_healing
+description: '帮助人走向自愈.'
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 0.0.1+1
+
+environment:
+    sdk: '>=3.4.4 <4.0.0'
+dependencies:
+    flutter:
+        sdk: flutter
+    easy_debounce: any
+    get: ^4.6.6 #状态管理、路由管理、国际化
+    dio: ^5.4.3+1 #网络请求
+    hive: 2.2.3 #持久化存储
+    hive_flutter: 1.1.0 #持久化存储
+    logger: ^2.0.2 #日志
+    extended_image: any #扩展image
+    # tdesign_flutter: ^0.1.0 # 组件库
+    cupertino_icons: ^1.0.6
+    json_annotation: ^4.9.0
+
+dev_dependencies:
+    flutter_test:
+        sdk: flutter
+    flutter_lints: ^3.0.0
+    build_runner: ^2.4.11
+    json_serializable: ^6.8.0
+
+flutter:
+    uses-material-design: true
+    assets:
+        - assets/imgs/
+        - assets/icons/
+    fonts:
+        - family: Hanti
+          fonts:
+              - asset: assets/fonts/Hanti.ttf
+        - family: Heiti
+          fonts:
+              - asset: assets/fonts/NotoSansCJK-Regular-1.otf
