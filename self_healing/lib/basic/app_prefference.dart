@@ -19,26 +19,26 @@ class AppPrefference {
     init();
   }
 
-  late Box hive;
+  late Box _hive;
 
   // factory AppPrefference.fromJson(Map<String, dynamic> json) =>
   //     _$AppPrefferenceFromJson(json);
   // Map<String, dynamic> toJson() => _$AppPrefferenceToJson(this);
 
   init() {
-    log("AppPrefference load");
-    hive = Hive.box("prefference");
+    log_("AppPrefference load");
+    _hive = Hive.box("prefference");
   }
 
   /* These are attributes at prefference   */
 
   /// whether the app is frist load
   set isFirstLoad(bool value) {
-    hive.put("isFirstLoad", value);
+    _hive.put("isFirstLoad", value);
   }
 
   bool get isFirstLoad {
-    var value = hive.get("isFirstLoad") as bool?;
+    var value = _hive.get("isFirstLoad") as bool?;
     value = value ?? true;
     return value;
   }

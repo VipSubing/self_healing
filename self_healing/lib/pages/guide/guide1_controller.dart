@@ -5,6 +5,14 @@ class Guide1Controller extends GetxController {
   var levelOfAnxiety = Rx<int?>(null);
   var levelOfDepression = Rx<int?>(null);
   var numOfSomatization = Rx<int?>(null);
+  var panicAttack = Rx<int?>(null);
+
+  bool get isEnableToPlan {
+    return levelOfAnxiety.value != null &&
+        levelOfDepression.value != null &&
+        numOfSomatization.value != null &&
+        numOfSomatization.value != null;
+  }
 
   final anxietyList = [
     LevelOfSpiritModel(
@@ -29,8 +37,15 @@ class Guide1Controller extends GetxController {
     LevelOfSpiritModel(name: "大于3项", level: 2),
   ];
 
-  final String introducesAnxiety = "焦虑整体的状况，通过专业自评工具或者医生诊断给出，没有的请通过专业焦虑自评工具获取";
-  final String introducesDepression = "多数情况下，长期焦虑下会伴生抑郁，如不知道请通过专业抑郁自评工具获取";
+  final panicList = [
+    LevelOfSpiritModel(
+        name: "良好", color: const Color.fromARGB(255, 164, 243, 168), level: 0),
+    LevelOfSpiritModel(
+        name: "惊恐", color: Color.fromARGB(255, 227, 39, 6), level: 1)
+  ];
+
+  final String introducesAnxiety = "焦虑整体的状况，通过专业自评工具或者医生诊断给出";
+  final String introducesDepression = "一般情况，长期焦虑下会伴生抑郁";
   final String introducesSomatization = "长期焦虑下会有躯体症状，它应该是非病理性的";
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/pages/guide/guide1_controller.dart';
+import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/widgets/button.dart';
 
@@ -28,19 +29,30 @@ class Guide1Page extends GetView<Guide1Controller> {
                       list: controller.anxietyList,
                       selectedIndex: controller.levelOfAnxiety.value,
                       onPress: (index) {
-                        log("press anxiety at $index");
+                        log_("press anxiety at $index");
                         controller.levelOfAnxiety.value = index;
                       }),
                   SizedBox(
                     height: 20,
                   ),
                   _Guide1Card(
-                      title: "是否抑郁",
+                      title: "是否抑郁发作",
                       list: controller.depressionList,
                       selectedIndex: controller.levelOfDepression.value,
                       onPress: (index) {
-                        log("press depression at $index");
+                        log_("press depression at $index");
                         controller.levelOfDepression.value = index;
+                      }),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _Guide1Card(
+                      title: "是否惊恐发作",
+                      list: controller.panicList,
+                      selectedIndex: controller.panicAttack.value,
+                      onPress: (index) {
+                        log_("press panic attack at $index");
+                        controller.panicAttack.value = index;
                       }),
                   SizedBox(
                     height: 20,
@@ -57,9 +69,22 @@ class Guide1Page extends GetView<Guide1Controller> {
                     height: 60,
                   ),
                   ElevatedButton(
-                      onPressed: () {
-                        log("obtain self healing plan");
-                      },
+                      onPressed: controller.isEnableToPlan
+                          ? () {
+                              log_("obtain self healing plan");
+
+                              Get.toNamed(Routes.guide2, arguments: [
+                                controller.anxietyList[
+                                    controller.levelOfAnxiety.value!],
+                                controller.depressionList[
+                                    controller.levelOfDepression.value!],
+                                controller
+                                    .panicList[controller.panicAttack.value!],
+                                controller.somatizationList[
+                                    controller.numOfSomatization.value!]
+                              ]);
+                            }
+                          : null,
                       child: Text("获取治愈计划"))
                 ],
               );

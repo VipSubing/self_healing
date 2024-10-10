@@ -10,7 +10,7 @@ class GuidePage extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    log("GuidePage build");
+    log_("GuidePage build");
     // TODO: implement build
     return Scaffold(
         body: SafeArea(
@@ -28,13 +28,13 @@ class GuidePage extends GetView {
             style: AppTextStyle.font36.weight200()),
         const SizedBox(height: 15),
         Text(
-          AppInfo.shared.anxietyEssence,
+          AppInfo.shared.anxietyIntro,
           style: AppTextStyle.font18,
         ),
         const Spacer(),
         ElevatedButton(
           onPressed: () {
-            log("start self healing");
+            log_("start self healing");
             Get.toNamed(Routes.guide1);
           },
           child: Text(AppInfo.shared.goForIt),

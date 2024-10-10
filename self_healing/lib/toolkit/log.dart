@@ -11,7 +11,7 @@ class CustomPrinter extends LogPrinter {
   }
 }
 
-log(dynamic message) {
+log_(dynamic message) {
   var logger = Logger(
     printer: CustomPrinter(),
   );

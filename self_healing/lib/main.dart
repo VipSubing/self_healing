@@ -11,7 +11,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox(AppPrefference.prefferenceBox);
 
-  log("app will loads");
+  log_("app will loads");
   runApp(const MyApp());
 }
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: AppStyle.shared.light,
       darkTheme: AppStyle.shared.dark,
       initialRoute:
-          AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,
+          !AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,
       routes: Routes.shared.pages(),
     );
   }

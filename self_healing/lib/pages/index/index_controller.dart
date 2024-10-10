@@ -45,7 +45,7 @@ class IndexController extends GetxController {
   // void onDel
 
   void onSelected(int index) {
-    log("tab selected $index");
+    log_("tab selected $index");
     pageIndex.value = index;
     var page = pages[index];
     if (page is SizedBox) {

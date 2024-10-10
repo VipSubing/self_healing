@@ -20,7 +20,7 @@ class AppStyle {
   }
 
   init() {
-    log("AppStyle init");
+    log_("AppStyle init");
     ui.PlatformDispatcher.instance.onPlatformBrightnessChanged = () {
       EasyDebounce.debounce(
           'onPlatformBrightnessChanged', // <-- An ID for this particular debouncer
@@ -35,12 +35,13 @@ class AppStyle {
     AppStyle.isDark.value =
         ui.PlatformDispatcher.instance.platformBrightness == Brightness.dark;
 
-    log("onPlatformBrightnessChanged dark : ${AppStyle.isDark.value}");
+    log_("onPlatformBrightnessChanged dark : ${AppStyle.isDark.value}");
     // if (AppStyle.isDark.value != isDark) {
     //   AppStyle.isDark.value = isDark;
     // }
   }
 
+  static double sizeBoxPadding = 15;
   static double horizontalPadding = 20;
   static double imgCornerRadius = 8.0;
   static double btnCornerRadius = 14.0;
@@ -50,6 +51,12 @@ class AppStyle {
 
   static Color tintColor(bool isDark) {
     return isDark ? tintColorForDark : tintColorForLight;
+  }
+
+  static Color borderLineColor(bool isDark) {
+    return isDark
+        ? Color.fromARGB(255, 167, 167, 167)
+        : Color.fromARGB(255, 77, 77, 77);
   }
 
   static var isDark = false.obs;
@@ -65,14 +72,16 @@ class AppStyle {
         : const Color.fromARGB(255, 241, 244, 247);
   }
 
+  static Color themeColor = Color.fromARGB(255, 4, 239, 117);
+
   ThemeData? _light;
   // app 初始化解阶段调用
   ThemeData get light {
-    log("light theme init");
+    log_("light theme init");
     _light ??= (() {
       final theme = ThemeData(
         fontFamily: "Heiti",
-        primaryColor: _themeColor(),
+        primaryColor: AppStyle.themeColor,
         brightness: Brightness.light,
         elevatedButtonTheme: _elevatedButtonThemeData(false),
         filledButtonTheme: _filledButtonThemeData(),
@@ -88,11 +97,11 @@ class AppStyle {
 
   ThemeData? _dark;
   ThemeData get dark {
-    log("dark theme init");
+    log_("dark theme init");
     _dark ??= (() {
       final theme = ThemeData(
         fontFamily: "Heiti",
-        primaryColor: _themeColor(),
+        primaryColor: AppStyle.themeColor,
         brightness: Brightness.dark,
         elevatedButtonTheme: _elevatedButtonThemeData(true),
         filledButtonTheme: _filledButtonThemeData(),
@@ -107,9 +116,9 @@ class AppStyle {
     return _dark!;
   }
 
-  Color _themeColor() {
-    return const Color.fromARGB(255, 4, 239, 117);
-  }
+  // Color _themeColor() {
+  //   return const Color.fromARGB(255, 4, 239, 117);
+  // }
 
   Color _backgroundColor(bool isDark) {
     return isDark ? Colors.black : const Color.fromARGB(255, 241, 244, 247);
@@ -119,7 +128,7 @@ class AppStyle {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(0),
-        backgroundColor: _themeColor(),
+        backgroundColor: AppStyle.themeColor,
         foregroundColor: isDark ? Colors.white : Colors.black87,
         minimumSize: const Size(double.infinity, 54),
         textStyle: AppTextStyle.font18,
@@ -135,7 +144,7 @@ class AppStyle {
     return FilledButtonThemeData(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.all(0),
-        backgroundColor: _themeColor(),
+        backgroundColor: AppStyle.themeColor,
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 54),
         textStyle: AppTextStyle.font16,
