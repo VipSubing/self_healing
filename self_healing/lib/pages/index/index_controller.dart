@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:self_healing/pages/mindfulness/mindfulness_page.dart';
 import 'package:self_healing/toolkit/log.dart';
 
 class IndexController extends GetxController {
   var pages = <Widget>[
     const SizedBox(),
     const SizedBox(),
-    const SizedBox(),
+    MindfulnessPage(),
     const SizedBox(),
     const SizedBox(),
   ].obs;
-  var pageIndex = 0.obs;
+  var pageIndex = 2.obs;
 
   get tabItems {
     return [

@@ -9,12 +9,13 @@ environment:
 dependencies:
     flutter:
         sdk: flutter
+    audioplayers: ^5.2.1
     easy_debounce: any
     get: ^4.6.6 #状态管理、路由管理、国际化
     dio: ^5.4.3+1 #网络请求
     hive: 2.2.3 #持久化存储
     hive_flutter: 1.1.0 #持久化存储
-    logger: ^2.0.2 #日志
+    logger: any
     extended_image: any #扩展image
     # tdesign_flutter: ^0.1.0 # 组件库
     cupertino_icons: ^1.0.6

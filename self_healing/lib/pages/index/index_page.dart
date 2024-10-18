@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/pages/index/index_controller.dart';
 import 'package:self_healing/toolkit/log.dart';
 
@@ -13,9 +14,7 @@ class IndexPage extends GetView<IndexController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Test"),
-        ),
+        appBar: null,
         body: Obx(() => IndexedStack(
               index: controller.pageIndex.value,
               children: controller.pages,
@@ -37,7 +36,7 @@ class IndexPage extends GetView<IndexController> {
           iconSize: 28,
           selectedFontSize: 10,
           unselectedFontSize: 10,
-          selectedItemColor: Theme.of(context).primaryColor,
+          selectedItemColor: AppStyle.themeColor,
           // unselectedItemColor: Colors.transparent,
         ));
   }

@@ -42,4 +42,15 @@ class AppPrefference {
     value = value ?? true;
     return value;
   }
+
+  /// whether the app is frist load
+  set playerMode(int mode) {
+    _hive.put("playerMode", mode);
+  }
+
+  int get playerMode {
+    var value = _hive.get("playerMode") as int?;
+    value = value ?? 0;
+    return value;
+  }
 }

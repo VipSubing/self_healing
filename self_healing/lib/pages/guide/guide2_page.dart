@@ -26,19 +26,19 @@ class Guide2Page extends GetView {
     _PlanItem(
         name: "正念",
         icon: "assets/icons/mindfulness_tab.png",
-        exposition: "通过冥想方式改善思维方式，有效改善焦虑抑郁",
+        exposition: "正念Mindfulness，正在飞速发展的治疗焦虑抑郁的工具，经过长期的科学实践，对改善焦虑抑郁非常有效。",
         grade: 1,
         iconColor: Color.fromARGB(255, 79, 242, 131)),
     _PlanItem(
         name: "CBT",
         icon: "assets/icons/cbt_tab.png",
-        exposition: "认知行为疗法(CBT)，训练大脑，改变错误认知",
+        exposition: "认知行为疗法(CBT)，源自于心理咨询，针对人格中的不合理信念和错误认知有纠正作用，从而改善焦虑。",
         grade: 0,
         iconColor: Color.fromARGB(255, 79, 218, 242)),
     _PlanItem(
         name: "支持",
         icon: "assets/icons/society_tab.png",
-        exposition: "倾述和分享，获得信任的人的支持",
+        exposition: "社会支持，从人际关系角度来缓解焦虑，获得他人的爱和支持，给焦虑一个释放的出口。",
         grade: 0,
         iconColor: Colors.pink),
     _PlanItem(
@@ -76,7 +76,7 @@ class Guide2Page extends GetView {
               ),
               Text(
                 _conditionSummary(),
-                style: AppTextStyle.font18.weight500(),
+                style: AppTextStyle.font18.weight700(),
               ),
               ..._itemModels().map((itemModel) {
                 return _planItemW(context, itemModel);
@@ -90,7 +90,7 @@ class Guide2Page extends GetView {
                     AppPrefference.shared.isFirstLoad = false;
                     Get.offAllNamed(Routes.index);
                   },
-                  child: Text("开始治愈"))
+                  child: Text("治愈"))
             ],
           ),
         )
@@ -204,7 +204,7 @@ class Guide2Page extends GetView {
   // plan item
   Widget _planItemW(BuildContext context, _PlanItem itemModel) {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 10),
       child: Row(
         children: [
           SizedBox(
@@ -315,7 +315,10 @@ class Guide2Page extends GetView {
 
       return "你的状态良好。";
     }
-    return "结合你的当前情况，建议如下：";
+    return """
+你当下处境困难，精神痛苦。
+如果你想走出来，请按照下面${_itemModels().length}条建议去做，效果显著！（甘露：10分建议去做；良药：8分建议去做；）
+    """;
   }
 
   bool _takeMedicine() {

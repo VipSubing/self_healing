@@ -1,7 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:ui' as ui;
+// import 'dart:ui' as ui;
 
 import '../toolkit/log.dart';
 
@@ -21,26 +21,25 @@ class AppStyle {
 
   init() {
     log_("AppStyle init");
-    ui.PlatformDispatcher.instance.onPlatformBrightnessChanged = () {
-      EasyDebounce.debounce(
-          'onPlatformBrightnessChanged', // <-- An ID for this particular debouncer
-          const Duration(milliseconds: 100), // <-- The debounce duration
-          resetBrightness // <-- The target method
-          );
-    };
+    // ui.PlatformDispatcher.instance.onPlatformBrightnessChanged = () {
+    //   EasyDebounce.debounce(
+    //       'onPlatformBrightnessChanged', // <-- An ID for this particular debouncer
+    //       const Duration(milliseconds: 100), // <-- The debounce duration
+    //       resetBrightness // <-- The target method
+    //       );
+    // };
     resetBrightness();
   }
 
   resetBrightness() {
-    AppStyle.isDark.value =
-        ui.PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+    // AppStyle.isDark.value =
+    //     ui.PlatformDispatcher.instance.platformBrightness == Brightness.dark;
 
-    log_("onPlatformBrightnessChanged dark : ${AppStyle.isDark.value}");
+    // log_("onPlatformBrightnessChanged dark : ${AppStyle.isDark.value}");
     // if (AppStyle.isDark.value != isDark) {
     //   AppStyle.isDark.value = isDark;
     // }
   }
-
   static double sizeBoxPadding = 15;
   static double horizontalPadding = 20;
   static double imgCornerRadius = 8.0;
@@ -62,7 +61,6 @@ class AppStyle {
   static var isDark = false.obs;
 
   static Color get background1Color {
-    logDebug("background1Color dark: ${isDark.value}");
     return isDark.value ? const Color.fromARGB(255, 39, 36, 36) : Colors.white;
   }
 

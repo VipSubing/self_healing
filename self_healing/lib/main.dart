@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: AppStyle.shared.light,
       darkTheme: AppStyle.shared.dark,
       initialRoute:
-          !AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,
+          AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,
       routes: Routes.shared.pages(),
     );
   }
