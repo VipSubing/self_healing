@@ -5,6 +5,7 @@ import 'package:self_healing/pages/guide/guide1_controller.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/widgets/button.dart';
+import 'package:self_healing/widgets/container.dart';
 
 class Guide1Page extends GetView<Guide1Controller> {
   Guide1Page({super.key}) {
@@ -111,29 +112,27 @@ class _Guide1Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
-            color: AppStyle.background1Color),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                this.title,
-                style: AppTextStyle.font18.weight600(),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              _rowWidget(context)
-            ],
-          ),
+    return BrightnessContainer(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              this.title,
+              style: AppTextStyle.font18.weight600(),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            _rowWidget(context)
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   //  焦虑等级Row
@@ -208,34 +207,32 @@ class _Guide1SomatizationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
-            color: AppStyle.background1Color),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTextStyle.font18.weight600(),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              _itemWidget(context),
-              const SizedBox(
-                height: 20,
-              ),
-              Image.asset("assets/imgs/guide1_anxiety_somatization.jpeg",
-                  fit: BoxFit.fitWidth)
-            ],
-          ),
+    return BrightnessContainer(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: AppTextStyle.font18.weight600(),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            _itemWidget(context),
+            const SizedBox(
+              height: 20,
+            ),
+            Image.asset("assets/imgs/guide1_anxiety_somatization.jpeg",
+                fit: BoxFit.fitWidth)
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget _itemWidget(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:self_healing/basic/app_style.dart';
+import 'package:self_healing/widgets/love.dart';
 import 'package:self_healing/widgets/tag_w.dart';
 
 class MindfulnessInfoW extends StatefulWidget {
@@ -61,26 +62,7 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _textW(context, widget.name, widget.time, widget.tag),
-              Container(
-                width: 40,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: null,
-                  child: Image.asset(
-                    "assets/icons/love_icon.png",
-                    width: 35,
-                    height: 35,
-                    color: widget.isLoved
-                        ? Colors.red
-                        : (WidgetsBinding.instance.platformDispatcher
-                                    .platformBrightness ==
-                                Brightness.dark
-                            ? Colors.white
-                            : Colors.black),
-                    colorBlendMode: BlendMode.srcIn,
-                  ),
-                ),
-              ),
+              LoveWidget(width: 40,height: 40,isLoved: widget.isLoved,onPress: widget.loveCallback,),
             ],
           )
         ],

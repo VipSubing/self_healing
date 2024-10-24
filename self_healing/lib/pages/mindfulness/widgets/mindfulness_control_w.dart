@@ -1,30 +1,29 @@
-import 'package:flutter/foundation.dart';
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/toolkit/log.dart';
+import 'package:tuple/tuple.dart';
 
 abstract class MindfulnessControlWDelegate {
   void mediaControlModeOnCallback(int currentMode);
   void mediaControlPlayOnCallback(bool currentPlaying);
   void mediaControlListOnCallback();
-  void mediaControlProgressOnCallback(
-      {double? realTimeVal, double? destinationVal});
+  void mediaControlSliderValOnCallback(double destinationVal);
 }
 
 class MindfulnessControlW extends StatelessWidget {
   MindfulnessControlW({
     super.key,
-    required this.secondsText,
-    required this.totalSecondsText,
-    required this.val,
+    required this.secs,
+    required this.totalSecs,
     required this.mode,
     required this.playing,
     required this.delegate,
   });
-  final String secondsText;
-  final String totalSecondsText;
-  final double val;
+
+  int secs;
+  int totalSecs;
   // 0:播完停   1: 单曲循环  2: 循环  3:随机
   final int mode;
   // 0: 播放 1:暂停
@@ -37,10 +36,9 @@ class MindfulnessControlW extends StatelessWidget {
     return Column(
       children: [
         _SliderW(
-          val: val,
-          secondsText: secondsText,
-          totalSecondsText: totalSecondsText,
-          callback: delegate.mediaControlProgressOnCallback,
+          secs: secs,
+          totalSecs: totalSecs,
+          callback: delegate.mediaControlSliderValOnCallback,
         ),
         SizedBox(
           height: 20,
@@ -113,7 +111,7 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
       case 3:
         icon = "assets/icons/player_mode_random_icon.png";
         break;
-      
+
       default:
     }
     return icon;
@@ -191,18 +189,62 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
   }
 }
 
-class _SliderW extends StatelessWidget {
+class _SliderW extends StatefulWidget {
   _SliderW(
       {super.key,
-      required this.val,
-      required this.secondsText,
-      required this.totalSecondsText,
-      this.callback});
-  final double val;
-  final String secondsText;
-  final String totalSecondsText;
+      required this.callback,
+      required this.secs,
+      required this.totalSecs});
+  int secs;
+  int totalSecs;
 
-  final void Function({double? realTimeVal, double? destinationVal})? callback;
+  final void Function(double destinationVal) callback;
+
+  @override
+  State<_SliderW> createState() => _SliderWState();
+}
+
+class _SliderWState extends State<_SliderW> {
+  double _val = 0.0;
+  int _secs = 0;
+  int _totalSecs = 0;
+  bool _isDragging = false;
+  int _lastDragTime = 0;
+
+  @override
+  void didUpdateWidget(_SliderW oldWidget) {
+    bool shouldUpdate = true;
+    if (!_isDragging) {
+      if (_lastDragTime != 0) {
+        final nowtime = DateTime.now().millisecondsSinceEpoch;
+        // logDebug("_lastDragTime :$_lastDragTime , nowtime :$nowtime");
+        if (nowtime - _lastDragTime >= 1000) {
+          _lastDragTime = 0;
+        } else {
+          shouldUpdate = false;
+        }
+      }
+    } else {
+      shouldUpdate = false;
+    }
+    if (shouldUpdate) {
+      setState(() {
+        _secs = widget.secs;
+        _totalSecs = widget.totalSecs;
+        if (_totalSecs < 0) {
+          _totalSecs = 0;
+        }
+        if (_secs > _totalSecs) {
+          _secs = _totalSecs;
+        }
+        if (_secs < 0) {
+          _secs = 0;
+        }
+        _val = _totalSecs == 0 ? 0 : (_secs / _totalSecs) * 100;
+      });
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,23 +259,26 @@ class _SliderW extends StatelessWidget {
               ),
             ),
             child: Slider(
-              value: val,
+              value: _val,
               min: 0,
               max: 100,
               onChanged: (val) {
-                if (callback != null) {
-                  callback!(realTimeVal: val);
+                
+                if (_totalSecs > 0) {
+                  setState(() {
+                    _val = val;
+                    _secs = (val / 100.0 * _totalSecs).toInt();
+                  });
                 }
               },
               onChangeStart: (value) {
-                if (callback != null) {
-                  callback!(realTimeVal: value);
-                }
+                _isDragging = true;
               },
               onChangeEnd: (value) {
-                if (callback != null) {
-                  callback!(destinationVal: value);
-                }
+                
+                _isDragging = false;
+                _lastDragTime = DateTime.now().millisecondsSinceEpoch;
+                widget.callback(value);
               },
               activeColor: Theme.of(context).primaryColor,
             )),
@@ -244,7 +289,7 @@ class _SliderW extends StatelessWidget {
               // width: 10,
               padding: EdgeInsets.only(left: 10),
               child: Text(
-                secondsText,
+                formatSeconds(_secs),
                 style: AppTextStyle.font12,
               ),
             ),
@@ -252,7 +297,7 @@ class _SliderW extends StatelessWidget {
               // width: 10,
               padding: EdgeInsets.only(right: 10),
               child: Text(
-                totalSecondsText,
+                formatSeconds(_totalSecs),
                 style: AppTextStyle.font12,
               ),
             ),

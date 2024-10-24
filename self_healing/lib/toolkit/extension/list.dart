@@ -6,4 +6,20 @@ extension ListExtension<E> on List<E> {
     }
     return list;
   }
+
+  eachE<T>(Function(E e, int i) toElement) {
+    for (var i = 0; i < length; i++) {
+      toElement(this[i], i);
+    }
+  }
+
+  List<E> findE(bool Function(E e, int i) toElement) {
+    List<E> list = [];
+    for (var i = 0; i < length; i++) {
+      if (toElement(this[i], i)) {
+        list.add(this[i]);
+      }
+    }
+    return list;
+  }
 }

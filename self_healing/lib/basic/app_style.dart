@@ -43,6 +43,7 @@ class AppStyle {
   static double sizeBoxPadding = 15;
   static double horizontalPadding = 20;
   static double imgCornerRadius = 8.0;
+  static double imgCornerSmallRadius = 4.0;
   static double btnCornerRadius = 14.0;
   static double cardCornerRadius = 14.0;
   static Color tintColorForLight = const Color.fromARGB(255, 8, 8, 8);
@@ -58,14 +59,13 @@ class AppStyle {
         : Color.fromARGB(255, 77, 77, 77);
   }
 
-  static var isDark = false.obs;
 
-  static Color get background1Color {
-    return isDark.value ? const Color.fromARGB(255, 39, 36, 36) : Colors.white;
+  static Color  background1Color(bool isDark) {
+    return isDark ? const Color.fromARGB(255, 39, 36, 36) : Colors.white;
   }
 
-  static Color get backgroundColor {
-    return isDark.value
+  static Color  backgroundColor(bool isDark) {
+    return isDark
         ? Colors.black
         : const Color.fromARGB(255, 241, 244, 247);
   }

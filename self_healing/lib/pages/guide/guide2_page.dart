@@ -11,6 +11,8 @@ import 'package:self_healing/pages/index/index_page.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/extension/list.dart';
 import 'package:self_healing/toolkit/log.dart';
+import 'package:self_healing/widgets/builder.dart';
+import 'package:self_healing/widgets/container.dart';
 
 class Guide2Page extends GetView {
   Guide2Page({super.key}) : this.modelList = Get.arguments;
@@ -129,11 +131,10 @@ class Guide2Page extends GetView {
         topTextList.add(topList[i].level == 0 ? "无惊恐" : "惊恐发作");
       }
     }
-    return Obx(() {
-      return Container(
+    return BrightnessContainer(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
-              color: AppStyle.background1Color),
+              ),
           padding: EdgeInsets.all(AppStyle.sizeBoxPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +157,6 @@ class Guide2Page extends GetView {
               )
             ],
           ));
-    });
   }
 
   // 状态统计
@@ -222,15 +222,14 @@ class Guide2Page extends GetView {
           SizedBox(
             width: 20,
           ),
-          Expanded(child: Obx(() {
-            return Container(
-              decoration: BoxDecoration(
-                  color: AppStyle.background1Color,
+          Expanded(child: BrightnessBuilder(builder:  (context , isDark) {
+            return BrightnessContainer(
+              decoration:  BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(AppStyle.cardCornerRadius),
                   border: Border.all(
                       width: 1,
-                      color: AppStyle.borderLineColor(AppStyle.isDark.value))),
+                      color: AppStyle.borderLineColor(isDark))),
               child: Padding(
                 padding: EdgeInsets.all(AppStyle.sizeBoxPadding),
                 child: Row(

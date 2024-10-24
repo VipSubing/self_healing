@@ -1,10 +1,7 @@
 import 'package:hive/hive.dart';
+import 'package:self_healing/basic/globals.dart';
+import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import '../toolkit/log.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-// part 'app_prefference.g.dart';
-
-@JsonSerializable()
 
 /// APP偏好设置
 class AppPrefference {
@@ -20,10 +17,6 @@ class AppPrefference {
   }
 
   late Box _hive;
-
-  // factory AppPrefference.fromJson(Map<String, dynamic> json) =>
-  //     _$AppPrefferenceFromJson(json);
-  // Map<String, dynamic> toJson() => _$AppPrefferenceToJson(this);
 
   init() {
     log_("AppPrefference load");
@@ -43,7 +36,6 @@ class AppPrefference {
     return value;
   }
 
-  /// whether the app is frist load
   set playerMode(int mode) {
     _hive.put("playerMode", mode);
   }
@@ -52,5 +44,35 @@ class AppPrefference {
     var value = _hive.get("playerMode") as int?;
     value = value ?? 0;
     return value;
+  }
+
+  set currentMedia(MindfulnessMediaModel media) {
+    final json = media.toJson();
+    _hive.put("currentMedia", json);
+  }
+
+  MindfulnessMediaModel get currentMedia {
+    var json = _hive.get("currentMedia") as Map<String, dynamic>?;
+    json = json ?? defaultMedia.toJson();
+    return MindfulnessMediaModel.fromJson(json);
+  }
+
+  set playList(List<MindfulnessMediaModel> list) {
+    final jsonList = list.map((item) {
+      return item.toJson();
+    }).toList();
+
+    _hive.put("playList", jsonList);
+  }
+
+  List<MindfulnessMediaModel> get playList {
+    var jsonList = _hive.get("playList") as List<Map<String, dynamic>>?;
+    jsonList = jsonList ??
+        defaultPlayList.map((item) {
+          return item.toJson();
+        }).toList();
+    return jsonList.map((item) {
+      return MindfulnessMediaModel.fromJson(item);
+    }).toList();
   }
 }

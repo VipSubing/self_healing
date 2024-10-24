@@ -5,10 +5,12 @@ import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
+import 'package:self_healing/pages/mindfulness/widgets/list_sheet.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_control_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_info_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_tips_w.dart';
 import 'package:self_healing/toolkit/log.dart';
+import 'package:tuple/tuple.dart';
 
 class MindfulnessPage extends GetView<MindfulnessController>
     implements MindfulnessControlWDelegate {
@@ -25,6 +27,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
             left: AppStyle.horizontalPadding,
             right: AppStyle.horizontalPadding),
         child: Obx(() {
+          "${controller.forceUpdate.value}";
           return Column(
             children: [
               MindfulnessTips(
@@ -38,16 +41,22 @@ class MindfulnessPage extends GetView<MindfulnessController>
                 tag: controller.media.value.type.name,
                 isLoved: controller.media.value.isCollected,
                 cover: controller.media.value.cover,
-                loveCallback: (bool loved) {},
+                loveCallback: (bool loved) {
+                  log_("press loved :${!loved}");
+                  controller.media.value.isCollected = !loved;
+                  controller.forceUpdate.value += 1;
+                },
               ),
               Spacer(),
-              MindfulnessControlW(
-                  val: controller.mediaController.sliderVal.value,
-                  secondsText: controller.mediaController.timeText1.value,
-                  totalSecondsText: controller.mediaController.timeText2.value,
-                  mode: controller.mediaController.mode.value.raw,
-                  playing: controller.mediaController.isPlaying.value,
-                  delegate: this),
+              Obx(() {
+                "force build ${controller.mediaController.forceUpdate}";
+                return MindfulnessControlW(
+                    secs: controller.mediaController.secs,
+                    totalSecs: controller.mediaController.totalSecs,
+                    mode: controller.mediaController.mode.value.raw,
+                    playing: controller.mediaController.isPlaying.value,
+                    delegate: this);
+              }),
               SizedBox(
                 height: 40,
               )
@@ -60,7 +69,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
 
   @override
   void mediaControlListOnCallback() {
-    // TODO: implement mediaControlListOnCallback
+    showListSheet(context: Get.context!,models: controller.mediaList.value);
   }
 
   @override
@@ -74,11 +83,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
   }
 
   @override
-  void mediaControlProgressOnCallback(
-      {double? realTimeVal, double? destinationVal}) {
-    log_(
-        "mediaControlProgressOnCallback realTimeVal :${realTimeVal} , destinationVal :${destinationVal}");
-    controller.mediaController
-        .setupVal(destinationVal: destinationVal, realTimeVal: realTimeVal);
+  void mediaControlSliderValOnCallback(double destinationVal) {
+    controller.mediaController.setupVal(destinationVal);
   }
 }
