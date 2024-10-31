@@ -5,7 +5,7 @@ import 'package:self_healing/pages/guide/guide1_controller.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/widgets/button.dart';
-import 'package:self_healing/widgets/container.dart';
+import 'package:self_healing/widgets/brightness/container.dart';
 
 class Guide1Page extends GetView<Guide1Controller> {
   Guide1Page({super.key}) {

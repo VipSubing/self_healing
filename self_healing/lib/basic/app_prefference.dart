@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:self_healing/basic/const.dart';
 import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import '../toolkit/log.dart';
@@ -46,15 +47,13 @@ class AppPrefference {
     return value;
   }
 
-  set currentMedia(MindfulnessMediaModel media) {
-    final json = media.toJson();
-    _hive.put("currentMedia", json);
+  set currentMediaIndex(int mediaIndex) {
+    _hive.put("currentMediaIndex", mediaIndex);
   }
 
-  MindfulnessMediaModel get currentMedia {
-    var json = _hive.get("currentMedia") as Map<String, dynamic>?;
-    json = json ?? defaultMedia.toJson();
-    return MindfulnessMediaModel.fromJson(json);
+  int get currentMediaIndex {
+    int? val = _hive.get("currentMediaIndex");
+    return val ?? 0;
   }
 
   set playList(List<MindfulnessMediaModel> list) {
@@ -66,11 +65,13 @@ class AppPrefference {
   }
 
   List<MindfulnessMediaModel> get playList {
-    var jsonList = _hive.get("playList") as List<Map<String, dynamic>>?;
-    jsonList = jsonList ??
-        defaultPlayList.map((item) {
-          return item.toJson();
-        }).toList();
+    List<dynamic> val = _hive.get("playList") ?? defaultMediaJsonList;
+    val = defaultMediaJsonList;
+    List<Map<String, dynamic>> jsonList = val.map((item) {
+      final json = item as Map<dynamic, dynamic>;
+      return Map<String, dynamic>.from(json);
+    }).toList();
+
     return jsonList.map((item) {
       return MindfulnessMediaModel.fromJson(item);
     }).toList();

@@ -5,18 +5,21 @@ import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
-import 'package:self_healing/pages/mindfulness/widgets/list_sheet.dart';
+import 'package:self_healing/pages/mindfulness/widgets/list_sheet/list_sheet.dart';
+import 'package:self_healing/pages/mindfulness/widgets/list_sheet/list_sheet_controller.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_control_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_info_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_tips_w.dart';
 import 'package:self_healing/toolkit/log.dart';
+import 'package:self_healing/widgets/dialog/alert.dart';
 import 'package:tuple/tuple.dart';
 
 class MindfulnessPage extends GetView<MindfulnessController>
-    implements MindfulnessControlWDelegate {
+    implements MindfulnessControlWDelegate, ListSheetDelegate {
   MindfulnessPage({super.key}) {
     Get.put(MindfulnessController());
   }
+  ListSheetController? sheetController;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +42,15 @@ class MindfulnessPage extends GetView<MindfulnessController>
                 name: controller.media.value.name,
                 time: formatMinutes(controller.media.value.duration),
                 tag: controller.media.value.type.name,
-                isLoved: controller.media.value.isCollected,
+                isLoved: controller.media.value.isLoved,
                 cover: controller.media.value.cover,
                 loveCallback: (bool loved) {
                   log_("press loved :${!loved}");
-                  controller.media.value.isCollected = !loved;
-                  controller.forceUpdate.value += 1;
+                  showAlert(context, title: "提示", content: "取消红心将会从列表移除",
+                      sureCallback: () {
+                    controller.setupLoved(controller.media.value, !loved);
+                    controller.forceUpdate.value += 1;
+                  });
                 },
               ),
               Spacer(),
@@ -69,7 +75,8 @@ class MindfulnessPage extends GetView<MindfulnessController>
 
   @override
   void mediaControlListOnCallback() {
-    showListSheet(context: Get.context!,models: controller.mediaList.value);
+    sheetController = showListSheet(context: Get.context!, delegate: this);
+    sheetController?.models.value = controller.mediaList.value;
   }
 
   @override
@@ -85,5 +92,40 @@ class MindfulnessPage extends GetView<MindfulnessController>
   @override
   void mediaControlSliderValOnCallback(double destinationVal) {
     controller.mediaController.setupVal(destinationVal);
+  }
+
+  @override
+  listSheetOnPressLove(ListSheet sheet, int index, bool isLoved) {
+    int time = DateTime.now().millisecondsSinceEpoch;
+
+    task() {
+      controller.removeMediaAlertTime = time;
+      controller.setupLoved(sheetController!.models.value[index], !isLoved);
+      sheetController?.models.value = controller.mediaList.value;
+      sheetController?.forceUpdate.value += 1;
+      controller.forceUpdate.value += 1;
+    }
+
+    if (time > controller.removeMediaAlertTime + 1000 * 5) {
+      // 超过5s
+
+      showAlert(Get.context!, title: "提示", content: "取消红心将会从列表移除",
+          sureCallback: () {
+        task();
+      });
+    } else {
+      task();
+    }
+  }
+
+  @override
+  listSheetItemOnPress(ListSheet sheet, int index) {
+    controller.setupPlayIndex(index: index);
+    sheetController?.forceUpdate.value += 1;
+  }
+
+  @override
+  listSheetItemReorder(ListSheet sheet, List<MindfulnessMediaModel> newModels) {
+    controller.setupReorder(newModels);
   }
 }

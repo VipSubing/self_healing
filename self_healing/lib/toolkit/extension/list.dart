@@ -22,4 +22,13 @@ extension ListExtension<E> on List<E> {
     }
     return list;
   }
+
+  exchangeE(int index1, int index2) {
+    E row = removeAt(index1);
+    insert(index2, row);
+  }
+
+  List<E> copyE() {
+    return List<E>.from(this);
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 
 String formatSeconds(int seconds) {
@@ -17,30 +18,13 @@ String formatMinutes(int seconds) {
   return "${(seconds / 60).toInt()}分钟";
 }
 
-final MindfulnessMediaModel defaultMedia = MindfulnessMediaModel(
-    name: "正念Sample",
-    duration: 3200,
-    type: MindfulnessMediaType.breathe,
-    src:
-        "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/brahmcentre/jz-45.mp3");
+Color invertColor(Color color) {
+  return Color.fromARGB(
+    color.alpha,
+    255 - color.red,
+    255 - color.green,
+    255 - color.blue,
+  );
+}
 
-final defaultPlayList = [
-  MindfulnessMediaModel(
-      name: "正念Sample1",
-      duration: 3200,
-      type: MindfulnessMediaType.breathe,
-      src:
-          "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/brahmcentre/jz-45.mp3"),
-  MindfulnessMediaModel(
-      name: "正念Sample2",
-      duration: 3200,
-      type: MindfulnessMediaType.breathe,
-      src:
-          "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/brahmcentre/jz-10.mp3"),
-  MindfulnessMediaModel(
-      name: "正念Sample3",
-      duration: 3200,
-      type: MindfulnessMediaType.breathe,
-      src:
-          "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/brahmcentre/stsm-10.mp4")
-];
+

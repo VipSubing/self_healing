@@ -81,6 +81,10 @@ class MindfulnessMediaController extends GetxController {
     await audioPlayer.seek(Duration(seconds: secs));
     if (autoPlay) {
       audioPlayer.resume();
+    } else {
+      if (audioPlayer.state == PlayerState.playing) {
+        audioPlayer.pause();
+      }
     }
   }
 
@@ -161,7 +165,7 @@ class MindfulnessMediaController extends GetxController {
   }
 
   playHistory(String src) {
-    if (playedList.length == 10) {
+    if (playedList.length == 30) {
       playedList.removeAt(0);
     }
     playedList.add(src);

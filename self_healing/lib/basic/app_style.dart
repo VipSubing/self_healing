@@ -1,6 +1,6 @@
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:self_healing/basic/globals.dart';
 // import 'dart:ui' as ui;
 
 import '../toolkit/log.dart';
@@ -59,15 +59,12 @@ class AppStyle {
         : Color.fromARGB(255, 77, 77, 77);
   }
 
-
-  static Color  background1Color(bool isDark) {
+  static Color background1Color(bool isDark) {
     return isDark ? const Color.fromARGB(255, 39, 36, 36) : Colors.white;
   }
 
-  static Color  backgroundColor(bool isDark) {
-    return isDark
-        ? Colors.black
-        : const Color.fromARGB(255, 241, 244, 247);
+  static Color backgroundColor(bool isDark) {
+    return isDark ? Colors.black : const Color.fromARGB(255, 241, 244, 247);
   }
 
   static Color themeColor = Color.fromARGB(255, 4, 239, 117);
@@ -98,7 +95,7 @@ class AppStyle {
     log_("dark theme init");
     _dark ??= (() {
       final theme = ThemeData(
-        fontFamily: "Heiti",
+        // fontFamily: "Heiti",
         primaryColor: AppStyle.themeColor,
         brightness: Brightness.dark,
         elevatedButtonTheme: _elevatedButtonThemeData(true),
@@ -177,6 +174,17 @@ class AppTextStyle extends TextStyle {
         fontFamily: fontFamily ?? this.fontFamily,
         fontWeight: fontWeight ?? this.fontWeight,
         color: color ?? this.color);
+  }
+
+  AppTextStyle brightnessColor({
+    required Color color,
+    Color? darkColor,
+  }) {
+    final isDark =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+            Brightness.dark;
+    final _darkColor = darkColor ?? invertColor(color);
+    return copy(color: isDark ? _darkColor : color);
   }
 
   AppTextStyle weight200() {

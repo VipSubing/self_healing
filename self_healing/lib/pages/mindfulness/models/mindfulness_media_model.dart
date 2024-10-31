@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:self_healing/basic/app_prefference.dart';
 import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
+import 'package:self_healing/toolkit/log.dart';
 
 part 'mindfulness_media_model.g.dart';
 
@@ -11,6 +12,7 @@ class MindfulnessMediaModel {
   int duration;
   bool isVideo = false;
   String src;
+  String? desc;
   MindfulnessMediaType type;
   String? cover;
 
@@ -20,16 +22,17 @@ class MindfulnessMediaModel {
       required this.src,
       required this.type,
       this.isVideo = false,
-      this.cover});
+      this.cover,
+      this.desc});
 
-  String get typeString {
-    return type.name;
-  }
+  // String get typeString {
+  //   return type.name;
+  // }
 
-  set typeString(String str) {
-    type = MindfulnessMediaType.values
-        .firstWhere((element) => element.name == str);
-  }
+  // set typeString(String str) {
+  //   type = MindfulnessMediaType.values
+  //       .firstWhere((element) => element.name == str);
+  // }
 
   factory MindfulnessMediaModel.fromJson(Map<String, dynamic> json) =>
       _$MindfulnessMediaModelFromJson(json);
@@ -37,10 +40,26 @@ class MindfulnessMediaModel {
 
   MindfulnessMediaModel copy() {
     return MindfulnessMediaModel(
-        name: name, duration: duration, type: type, src: src, cover: cover);
+        name: name,
+        duration: duration,
+        type: type,
+        src: src,
+        cover: cover,
+        desc: desc);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+    return other is MindfulnessMediaModel && other.src == src;
+  }
+
+  @override
+  int get hashCode => src.hashCode;
 }
 
+@JsonEnum(valueField: 'name')
 enum MindfulnessMediaType {
   other("其他"), //其他
   soga(" 瑜伽"), // 瑜伽
@@ -57,7 +76,7 @@ enum MindfulnessMediaType {
 }
 
 extension Ex on MindfulnessMediaModel {
-  bool get isCollected {
+  bool get isLoved {
     final controller = Get.find<MindfulnessController>();
     var list = controller.mediaList.value;
     for (var item in list) {
@@ -66,18 +85,6 @@ extension Ex on MindfulnessMediaModel {
       }
     }
     return false;
-  }
-
-  set isCollected(bool val) {
-    final controller = Get.find<MindfulnessController>();
-    if (val) {
-      controller.mediaList.value.add(this.copy());
-      // controller.mediaList.value = List.from(controller.mediaList.value);
-    } else {
-      controller.mediaList.value.removeWhere((item) {
-        return item.src == src;
-      });
-    }
   }
 
   bool get isPlaying {

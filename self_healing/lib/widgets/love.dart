@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:self_healing/widgets/builder.dart';
+import 'package:self_healing/widgets/brightness/builder.dart';
 
 class LoveWidget extends StatelessWidget {
   const LoveWidget(
@@ -21,9 +21,13 @@ class LoveWidget extends StatelessWidget {
       height: height ?? 40,
       child: ElevatedButton(
         onPressed: () => onPress(isLoved),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent),
         child: BrightnessBuilder(builder: (context, isBlank) {
           return Image.asset(
+            // width: 20,
+            // height: 20,
             "assets/icons/love_icon.png",
             color:
                 isLoved ? Colors.red : (isBlank ? Colors.white : Colors.black),

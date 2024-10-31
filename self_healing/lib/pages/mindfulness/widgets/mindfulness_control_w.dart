@@ -210,9 +210,20 @@ class _SliderWState extends State<_SliderW> {
   int _totalSecs = 0;
   bool _isDragging = false;
   int _lastDragTime = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    reset();
+  }
 
   @override
   void didUpdateWidget(_SliderW oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    reset();
+  }
+
+  reset() {
     bool shouldUpdate = true;
     if (!_isDragging) {
       if (_lastDragTime != 0) {
@@ -243,7 +254,6 @@ class _SliderWState extends State<_SliderW> {
         _val = _totalSecs == 0 ? 0 : (_secs / _totalSecs) * 100;
       });
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -263,7 +273,6 @@ class _SliderWState extends State<_SliderW> {
               min: 0,
               max: 100,
               onChanged: (val) {
-                
                 if (_totalSecs > 0) {
                   setState(() {
                     _val = val;
@@ -275,7 +284,6 @@ class _SliderWState extends State<_SliderW> {
                 _isDragging = true;
               },
               onChangeEnd: (value) {
-                
                 _isDragging = false;
                 _lastDragTime = DateTime.now().millisecondsSinceEpoch;
                 widget.callback(value);

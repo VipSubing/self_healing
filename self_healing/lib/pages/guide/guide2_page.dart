@@ -11,8 +11,8 @@ import 'package:self_healing/pages/index/index_page.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/extension/list.dart';
 import 'package:self_healing/toolkit/log.dart';
-import 'package:self_healing/widgets/builder.dart';
-import 'package:self_healing/widgets/container.dart';
+import 'package:self_healing/widgets/brightness/builder.dart';
+import 'package:self_healing/widgets/brightness/container.dart';
 
 class Guide2Page extends GetView {
   Guide2Page({super.key}) : this.modelList = Get.arguments;

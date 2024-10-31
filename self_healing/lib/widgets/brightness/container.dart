@@ -34,11 +34,13 @@ class BrightnessContainer extends StatefulWidget {
   final Widget? child;
 
   @override
-  State<BrightnessContainer> createState() => _BrightnessContainerState();
+  State<BrightnessContainer> createState() => BrightnessContainerState();
 }
 
-class _BrightnessContainerState extends State<BrightnessContainer>
+class BrightnessContainerState extends State<BrightnessContainer>
     with WidgetsBindingObserver {
+  late Container container;
+
   @override
   void initState() {
     super.initState();
@@ -61,15 +63,17 @@ class _BrightnessContainerState extends State<BrightnessContainer>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final decoration = widget.decoration.copyWith(
+        color: widget.decoration.color ??
+            (AppStyle.background1Color(
+                WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                    Brightness.dark)));
+    container = Container(
+      key: widget.key,
       alignment: widget.alignment,
       padding: widget.padding,
       color: widget.color,
-      decoration: widget.decoration.copyWith(
-          color: widget.decoration.color ??
-              (AppStyle.background1Color(WidgetsBinding
-                      .instance.platformDispatcher.platformBrightness ==
-                  Brightness.dark))),
+      decoration: decoration,
       foregroundDecoration: widget.foregroundDecoration,
       width: widget.width,
       height: widget.height,
@@ -80,5 +84,6 @@ class _BrightnessContainerState extends State<BrightnessContainer>
       clipBehavior: widget.clipBehavior,
       child: widget.child,
     );
+    return container;
   }
 }
