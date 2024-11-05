@@ -3,6 +3,8 @@ import 'package:self_healing/pages/guide/guide1_page.dart';
 import 'package:self_healing/pages/guide/guide2_page.dart';
 import 'package:self_healing/pages/guide/guide_page.dart';
 import 'package:self_healing/pages/index/index_page.dart';
+import 'package:self_healing/pages/mindfulness/pages/details/media_details_page.dart';
+import 'package:self_healing/pages/mindfulness/pages/shop/media_shop_page.dart';
 
 class Routes {
   static Routes? _shared;
@@ -17,6 +19,8 @@ class Routes {
   static String guide1 = "guide1";
   static String guide2 = "guide2";
   static String index = "index";
+  static String mindfulnessShop = "mindfulnessShop";
+  static String mindfulnessDetails = "mindfulnessDetails";
 
   Map<String, WidgetBuilder> pages() {
     return {
@@ -28,6 +32,10 @@ class Routes {
       guide2: (context) => (Guide2Page()),
       // 首页
       index: (context) => (IndexPage()),
+      // 商场
+      mindfulnessShop: (context) => (MediaShopPage()),
+      // 详情
+      mindfulnessDetails: (context) => (MediaDetailsPage()),
     };
   }
 }

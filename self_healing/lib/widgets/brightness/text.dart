@@ -26,7 +26,8 @@ class BrightnessText extends StatelessWidget {
   Widget build(BuildContext context) {
     return BrightnessBuilder(builder: (context, isDark) {
       final _darkColor = darkColor ?? invertColor(color);
-      var _style = style ?? TextStyle(color: isDark ? _darkColor : color);
+      var _style =
+          (style ?? TextStyle()).copyWith(color: isDark ? _darkColor : color);
 
       return Text(
         data,

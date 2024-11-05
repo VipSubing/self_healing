@@ -13,8 +13,8 @@ final defaultMediaJsonList = [
     "type":"身体扫描",
     "src":
         "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/bz/bz-stsm.mp4",
-    "cover":
-        "https://mmbiz.qpic.cn/mmbiz_jpg/L3LEiaDunWKYRrLO2rxpibFX7clPIrAaqcBT4Wb8Of9iaOk9e04micicFIKDTkqWoB6PGNdibFTQuXApPVrLvjSzfiboQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1",
+    // "cover":
+    //     "https://mmbiz.qpic.cn/mmbiz_jpg/L3LEiaDunWKYRrLO2rxpibFX7clPIrAaqcBT4Wb8Of9iaOk9e04micicFIKDTkqWoB6PGNdibFTQuXApPVrLvjSzfiboQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1",
     "desc":
         "在进行“身体扫描”练习时，请找一个没有任何干扰、可以舒适躺下的地方。身体扫描的目的是尽自己所能，按一定的顺序在身体不同部位移动注意力时，对自己体验到的身体感觉加以觉察，从而更好地与自己的身体建立联结。",
   },
@@ -37,8 +37,8 @@ final defaultMediaJsonList = [
         "https://public-1-1309961435.cos.ap-chengdu.myqcloud.com/mbct/audios/bz/bz-znyd.mp4",
     "cover":
         "https://mmbiz.qpic.cn/mmbiz_jpg/L3LEiaDunWKYRrLO2rxpibFX7clPIrAaqcBT4Wb8Of9iaOk9e04micicFIKDTkqWoB6PGNdibFTQuXApPVrLvjSzfiboQ/640?wx_fmt=jpeg&wxfrom=5&wx_lazy=1&wx_co=1",
-    "desc":
-        "正念运动包括一系列温和的伸展运动。请找到合适的时间、地点练习，以便不被打扰，可以躺在地板的垫子或毯子上练习。记得要照顾好自己的身体，如果你有什么背部问题或其他健康困扰，请首先聆听指导语，不做练习，然后认真思考一下自己是否应该做全部的或部分的练习动作。你可以自行跳过那些目前无法完成的难度大的练习动作，只需要跟着指导语想象做练习即可。本练习的目的是帮助你觉察自己的身体，按照它们的本来面貌接受它们，而不是健身或是挑战自己的伸展极限。",
+    // "desc":
+    //     "正念运动包括一系列温和的伸展运动。请找到合适的时间、地点练习，以便不被打扰，可以躺在地板的垫子或毯子上练习。记得要照顾好自己的身体，如果你有什么背部问题或其他健康困扰，请首先聆听指导语，不做练习，然后认真思考一下自己是否应该做全部的或部分的练习动作。你可以自行跳过那些目前无法完成的难度大的练习动作，只需要跟着指导语想象做练习即可。本练习的目的是帮助你觉察自己的身体，按照它们的本来面貌接受它们，而不是健身或是挑战自己的伸展极限。",
   },
   {
     "name": "20分钟正念静坐",

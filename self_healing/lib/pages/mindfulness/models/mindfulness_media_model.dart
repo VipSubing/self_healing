@@ -45,7 +45,8 @@ class MindfulnessMediaModel {
         type: type,
         src: src,
         cover: cover,
-        desc: desc);
+        desc: desc,
+        isVideo: isVideo);
   }
 
   @override

@@ -132,31 +132,31 @@ class Guide2Page extends GetView {
       }
     }
     return BrightnessContainer(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
-              ),
-          padding: EdgeInsets.all(AppStyle.sizeBoxPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ...topList.mapE((model, i) {
-                    // log_(i);
-                    return _circleWidget(context, model, topTextList[i]);
-                  })
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "躯体症${list[3].name}",
-                style: AppTextStyle.font20,
-              )
-            ],
-          ));
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppStyle.cardCornerRadius),
+        ),
+        padding: EdgeInsets.all(AppStyle.sizeBoxPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ...topList.mapE((model, i) {
+                  // log_(i);
+                  return _circleWidget(context, model, topTextList[i]);
+                })
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "躯体症${list[3].name}",
+              style: AppTextStyle.font20,
+            )
+          ],
+        ));
   }
 
   // 状态统计
@@ -222,14 +222,13 @@ class Guide2Page extends GetView {
           SizedBox(
             width: 20,
           ),
-          Expanded(child: BrightnessBuilder(builder:  (context , isDark) {
+          Expanded(child: BrightnessBuilder(builder: (context, isDark) {
             return BrightnessContainer(
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(AppStyle.cardCornerRadius),
                   border: Border.all(
-                      width: 1,
-                      color: AppStyle.borderLineColor(isDark))),
+                      width: 1, color: AppStyle.borderLineColor(isDark))),
               child: Padding(
                 padding: EdgeInsets.all(AppStyle.sizeBoxPadding),
                 child: Row(

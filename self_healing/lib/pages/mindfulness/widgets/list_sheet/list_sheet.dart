@@ -139,7 +139,7 @@ class _ItemWidget extends StatelessWidget {
                 child: SizedBox(
                   width: 50,
                   height: 50,
-                  child: MiniNetImage(src: model.cover),
+                  child: NetImage(src: model.cover),
                 )),
             SizedBox(
               width: 10,
@@ -192,17 +192,17 @@ class _ItemWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(
-                time,
-                style: AppTextStyle.font12.copyWith(color: color),
+              TagW(
+                text: tag,
+                textStyle: TextStyle(color: color, fontSize: 12),
               ),
               SizedBox(
                 width: 10,
               ),
-              TagW(
-                text: tag,
-                textStyle: TextStyle(color: color, fontSize: 12),
-              )
+              Text(
+                time,
+                style: AppTextStyle.font12.copyWith(color: color),
+              ),
             ],
           )
         ],

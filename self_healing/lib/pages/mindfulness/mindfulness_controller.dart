@@ -17,6 +17,8 @@ class MindfulnessController extends GetxController
   late MindfulnessMediaController mediaController;
   var forceUpdate = 0.obs;
   int removeMediaAlertTime = 0;
+
+  
   MindfulnessController() {
     playIndex.value = AppPrefference.shared.currentMediaIndex;
     mediaList = Rx<List<MindfulnessMediaModel>>(AppPrefference.shared.playList);

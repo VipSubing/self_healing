@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:self_healing/basic/app_style.dart';
+import 'package:self_healing/widgets/brightness/container.dart';
 
 class MindfulnessTips extends StatelessWidget {
   MindfulnessTips({super.key, required this.tipsText, required this.onPress});
@@ -11,7 +11,7 @@ class MindfulnessTips extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: LayoutBuilder(builder: (context, constraints) {
-        return Container(
+        return BrightnessContainer(
           height: 70,
           width: constraints.maxWidth,
           // padding: EdgeInsets.all(5),

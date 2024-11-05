@@ -29,8 +29,9 @@ class LoveWidget extends StatelessWidget {
             // width: 20,
             // height: 20,
             "assets/icons/love_icon.png",
-            color:
-                isLoved ? Colors.red : (isBlank ? Colors.white : Colors.black),
+            color: isLoved
+                ? Colors.red
+                : (isBlank ? Colors.white : Color.fromARGB(255, 154, 154, 154)),
             colorBlendMode: BlendMode.srcIn,
           );
         }),

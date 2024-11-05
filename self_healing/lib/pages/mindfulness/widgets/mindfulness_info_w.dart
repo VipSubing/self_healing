@@ -52,8 +52,8 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
           AspectRatio(
             aspectRatio: 1.0,
             child: Container(
-              color: Colors.black38,
-            ),
+                // color: Colors.black38,
+                ),
           ),
           SizedBox(
             height: 30,
@@ -62,7 +62,12 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _textW(context, widget.name, widget.time, widget.tag),
-              LoveWidget(width: 40,height: 40,isLoved: widget.isLoved,onPress: widget.loveCallback,),
+              LoveWidget(
+                width: 40,
+                height: 40,
+                isLoved: widget.isLoved,
+                onPress: widget.loveCallback,
+              ),
             ],
           )
         ],
