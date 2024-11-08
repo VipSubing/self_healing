@@ -62,14 +62,15 @@ class MindfulnessMediaModel {
 
 @JsonEnum(valueField: 'name')
 enum MindfulnessMediaType {
-  other("其他"), //其他
-  soga(" 瑜伽"), // 瑜伽
+  
+  soga("瑜伽"), // 瑜伽
   meditation("静坐"), // 静坐
   bodyScanning("身体扫描"), //身体扫描
   walk("行走"), //行走
   breathe("呼吸"), //呼吸
   diet("饮食"), //饮食
-  compassion("慈悲心") //慈悲心
+  compassion("慈悲心") ,//慈悲心
+  other("其他"), //其他
   ;
 
   final String name;

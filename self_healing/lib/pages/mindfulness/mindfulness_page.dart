@@ -102,7 +102,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
         Get.toNamed(Routes.mindfulnessShop);
         break;
       case 1:
-        Get.toNamed(Routes.mindfulnessShop);
+        Get.toNamed(Routes.mindfulnessCreate);
         break;
       default:
     }

@@ -18,12 +18,14 @@ dependencies:
     hive: 2.2.3 #持久化存储
     hive_flutter: 1.1.0 #持久化存储
     logger: any
-    # extended_image: any #扩展image
-    # tdesign_flutter: ^0.1.0 # 组件库
+    file_picker: any
+    wechat_assets_picker: ^9.4.0
+    flutter_smart_dialog: any
     cupertino_icons: ^1.0.6
     json_annotation: ^4.9.0
     flutter_easyrefresh: any
     tuple: any
+    tencentcloud_cos_sdk_plugin: ^1.1.7
 
 dev_dependencies:
     flutter_test:

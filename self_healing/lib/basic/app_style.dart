@@ -54,9 +54,8 @@ class AppStyle {
   }
 
   static Color borderLineColor(bool isDark) {
-    return isDark
-        ? Color.fromARGB(255, 167, 167, 167)
-        : Color.fromARGB(255, 77, 77, 77);
+    final color = Color.fromARGB(255, 202, 197, 197);
+    return isDark ? invertColor(color) : color;
   }
 
   static Color background1Color(bool isDark) {

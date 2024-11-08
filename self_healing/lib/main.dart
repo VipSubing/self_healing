@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: AppInfo.shared.appName,
       theme: AppStyle.shared.light,
+      locale: const Locale('zh', 'CN'), // 设置为中文简体
+
       darkTheme: AppStyle.shared.dark,
       initialRoute:
           AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,

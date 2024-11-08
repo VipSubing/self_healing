@@ -22,6 +22,7 @@ import 'package:self_healing/widgets/tag_w.dart';
 
 class MediaShopPage extends GetView<MediaShopController> {
   MediaShopPage({super.key}) {
+    Get.delete<MediaShopController>();
     var controller = MediaShopController();
     Get.put(controller);
 
@@ -30,6 +31,7 @@ class MediaShopPage extends GetView<MediaShopController> {
   final refreshController = EasyRefreshController();
   final searchController = TextEditingController();
   final playerController = Get.find<MindfulnessController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
