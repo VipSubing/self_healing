@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import 'package:self_healing/toolkit/log.dart';
+import 'package:self_healing/toolkit/oss.dart';
 
 class MediaCreateController extends GetxController {
   MindfulnessMediaModel? media;
@@ -59,14 +61,26 @@ class MediaCreateController extends GetxController {
     return res;
   }
 
-  upload() {
-    MindfulnessMediaModel(
+  Future<String> upload() async {
+    var mediaUrl = await Oss.shared
+        .uploadSimple(srcPath: mediaSrc.value!, type: OSSType.media);
+    var coverUrl = coverSrc.value != null
+        ? await Oss.shared
+            .uploadSimple(srcPath: coverSrc.value!, type: OSSType.img)
+        : null;
+
+    var model = MindfulnessMediaModel(
         duration: duration.value!,
         name: name.value!,
-        src: mediaSrc.value!,
-        cover: coverSrc.value,
+        src: mediaUrl,
+        cover: coverUrl,
+        desc: description.value,
         type: MindfulnessMediaType.values
             .where((item) => type.value! == item.name)
             .first);
+    String jsonString = jsonEncode(model.toJson());
+    Uint8List uint8List = utf8.encode(jsonString);
+    return await Oss.shared
+        .uploadSimple(byteArr: uint8List, type: OSSType.json);
   }
 }

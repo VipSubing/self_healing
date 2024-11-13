@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:self_healing/basic/app_info.dart';
 import 'package:self_healing/basic/app_prefference.dart';
@@ -29,6 +30,10 @@ class MyApp extends StatelessWidget {
       initialRoute:
           AppPrefference.shared.isFirstLoad ? Routes.guide : Routes.index,
       routes: Routes.shared.pages(),
+      // here
+      navigatorObservers: [FlutterSmartDialog.observer],
+      // here
+      builder: FlutterSmartDialog.init(),
     );
   }
 }

@@ -21,11 +21,12 @@ dependencies:
     file_picker: any
     wechat_assets_picker: ^9.4.0
     flutter_smart_dialog: any
-    cupertino_icons: ^1.0.6
     json_annotation: ^4.9.0
     flutter_easyrefresh: any
     tuple: any
     tencentcloud_cos_sdk_plugin: ^1.1.7
+    path: ^1.9.0
+    uuid: ^4.5.1
 
 dev_dependencies:
     flutter_test:

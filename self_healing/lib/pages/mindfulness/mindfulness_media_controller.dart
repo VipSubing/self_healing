@@ -29,6 +29,8 @@ class MindfulnessMediaController extends GetxController {
 
   var forceUpdate = 0.obs;
 
+  Object? exception;
+
   @override
   void dispose() {
     audioPlayer.dispose();
@@ -77,7 +79,7 @@ class MindfulnessMediaController extends GetxController {
     redrawSlider();
     playHistory(src);
 
-    await audioPlayer.setSourceUrl(src);
+    await setSource(src);
     await audioPlayer.seek(Duration(seconds: secs));
     if (autoPlay) {
       audioPlayer.resume();
@@ -85,6 +87,15 @@ class MindfulnessMediaController extends GetxController {
       if (audioPlayer.state == PlayerState.playing) {
         audioPlayer.pause();
       }
+    }
+  }
+
+  Future setSource(String url) async {
+    try {
+      await audioPlayer.setSourceUrl(url);
+      exception = null;
+    } catch (e) {
+      exception = e;
     }
   }
 
@@ -179,6 +190,9 @@ class MindfulnessMediaController extends GetxController {
 
   setupPlay(bool isPlaying_) {
     if (!isPlaying_) {
+      if (exception != null) {
+        setSource(playedList.last);
+      }
       audioPlayer.resume();
     } else {
       audioPlayer.pause();

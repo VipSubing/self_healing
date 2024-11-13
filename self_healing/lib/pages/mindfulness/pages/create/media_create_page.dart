@@ -18,8 +18,26 @@ class MediaCreatePage extends GetView<MediaCreateController> {
     Get.delete<MediaCreateController>();
     Get.put(MediaCreateController());
   }
-  onCommit() {}
+
+  FocusNode node1 = FocusNode();
+  FocusNode node2 = FocusNode();
+  onCommit() async {
+    unfoucs();
+    SmartDialog.showLoading();
+    try {
+      var url = await controller.upload();
+      log_("onCommit suc :$url");
+      SmartDialog.dismiss();
+      SmartDialog.showNotify(msg: "操作成功", notifyType: NotifyType.success);
+      Get.back();
+    } catch (e) {
+      SmartDialog.dismiss();
+      SmartDialog.showNotify(msg: "操作失败", notifyType: NotifyType.failure);
+    }
+  }
+
   onMediaPicker() async {
+    unfoucs();
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
@@ -34,6 +52,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
   }
 
   onCoverPicker() async {
+    unfoucs();
     final List<AssetEntity>? result = await AssetPicker.pickAssets(
       Get.context!,
       pickerConfig: const AssetPickerConfig(
@@ -46,11 +65,17 @@ class MediaCreatePage extends GetView<MediaCreateController> {
     }
   }
 
+  unfoucs() {
+    node1.unfocus();
+    node2.unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        // FocusScope.of(context).unfocus();
+        unfoucs();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -80,16 +105,20 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                       SizedBox(
                         height: 5,
                       ),
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(AppStyle.imgCornerRadius),
-                        child: TextField(
-                          onChanged: (value) => controller.name.value = value,
-                          maxLength: 25,
-                          decoration: const InputDecoration(
-                              filled: true,
-                              hintText: '正念静坐-20分钟',
-                              border: InputBorder.none),
+                      TextField(
+                        onChanged: (value) => controller.name.value = value,
+                        maxLength: 40,
+                        focusNode: node1,
+                        textDirection: TextDirection.ltr,
+                        textAlignVertical: TextAlignVertical.top,
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                          filled: true,
+                          hintText: '正念静坐-20分钟',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(
+                                  AppStyle.imgCornerRadius)),
                         ),
                       ),
                       SizedBox(
@@ -149,21 +178,25 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                       SizedBox(
                         height: 7,
                       ),
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(AppStyle.imgCornerRadius),
-                        child: Container(
-                          height: 180,
-                          child: TextField(
-                            onChanged: (value) => controller.description.value,
-                            maxLength: 500,
-                            expands: true,
-                            maxLines: null,
-                            // minLines: 1,
-                            decoration: const InputDecoration(
-                                filled: true,
-                                hintText: '描述',
-                                border: InputBorder.none),
+                      Container(
+                        height: 180,
+                        child: TextField(
+                          onChanged: (value) => controller.description.value,
+                          maxLength: 500,
+                          focusNode: node2,
+                          expands: true,
+                          maxLines: null,
+                          // minLines: 1,
+                          textDirection: TextDirection.ltr,
+                          textAlignVertical: TextAlignVertical.top,
+                          textAlign: TextAlign.start,
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: '描述',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(
+                                    AppStyle.imgCornerRadius)),
                           ),
                         ),
                       ),
