@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:self_healing/basic/app_prefference.dart';
 import 'dart:math';
 import 'package:get/get.dart';
@@ -31,20 +32,13 @@ class MindfulnessMediaController extends GetxController {
 
   Object? exception;
 
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    log_("MindfulnessMediaController dispose");
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
-  onClose() {
-    audioPlayer.dispose();
-    log_("MindfulnessMediaController onClose");
-    super.onClose();
-  }
+  CacheManager cacheManager = CacheManager(
+    Config(
+      "mindfulnessMedia",
+      stalePeriod: const Duration(days: 7),
+      maxNrOfCacheObjects: 20,
+    ),
+  );
 
   MindfulnessMediaController({
     required this.delegate,
@@ -69,6 +63,20 @@ class MindfulnessMediaController extends GetxController {
 
     audioPlayer.setReleaseMode(ReleaseMode.stop);
   }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    log_("MindfulnessMediaController dispose");
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  onClose() {
+    audioPlayer.dispose();
+    log_("MindfulnessMediaController onClose");
+    super.onClose();
+  }
 
   mediaSetup({
     int secs_ = 0,
@@ -78,6 +86,8 @@ class MindfulnessMediaController extends GetxController {
     secs = secs_;
     redrawSlider();
     playHistory(src);
+
+    
 
     await setSource(src);
     await audioPlayer.seek(Duration(seconds: secs));
@@ -92,7 +102,8 @@ class MindfulnessMediaController extends GetxController {
 
   Future setSource(String url) async {
     try {
-      await audioPlayer.setSourceUrl(url);
+      var file = await cacheManager.getSingleFile(url);
+      await audioPlayer.setSourceDeviceFile(file.path);
       exception = null;
     } catch (e) {
       exception = e;

@@ -11,7 +11,6 @@ import 'package:self_healing/toolkit/log.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox(AppPrefference.prefferenceBox);
-
   log_("app will loads");
   runApp(const MyApp());
 }

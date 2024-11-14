@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:tencentcloud_cos_sdk_plugin/cos.dart';
@@ -8,7 +10,12 @@ import 'package:tencentcloud_cos_sdk_plugin/pigeon.dart';
 import 'package:tencentcloud_cos_sdk_plugin/transfer_task.dart';
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
+import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+
+typedef OssJsonsResult = Tuple2<List<Map<String, dynamic>>, bool>;
 
 class Oss {
   static Oss? _shared;
@@ -17,13 +24,53 @@ class Oss {
     return _shared!;
   }
 
-  Oss._internal() {
-    String SECRET_ID = "AKIDbHm4C8VovsskS6e1Cew8jbQ5g7NRajrt"; //永久密钥 secretId
-    String SECRET_KEY = "vfP3byEPTN5kQzNdw894qW1LYaQ8lKnB"; //永久密钥 secretKey
-    Cos().initWithPlainSecret(SECRET_ID, SECRET_KEY);
-  }
+  Oss._internal() {}
   int index = 0;
   bool registed = false;
+  String bucket = "self-healing-1309961435";
+  String region = "ap-chengdu";
+  String? jsonNextMarker;
+
+  Future<OssJsonsResult> getJsons(bool first) async {
+    await regist();
+    // prevPageBucketContents 是上一页的返回结果，这里的 nextMarker 表示下一页的起始位置
+    String? prevPageMarker = jsonNextMarker;
+    String prefix = "jsons/";
+    BucketContents bucketContents =
+        await Cos().getDefaultService().getBucket(bucket,
+            prefix: prefix, // 前缀匹配，用来规定返回的对象前缀地址
+            marker: first ? null : prevPageMarker, // 起始位置
+            maxKeys: 20 // 单次返回最大的条目数量，默认1000
+            );
+    // 表示数据被截断，需要拉取下一页数据
+    var isTruncated = bucketContents.isTruncated;
+    // nextMarker 表示下一页的起始位置
+    jsonNextMarker = bucketContents.nextMarker;
+
+    var list = bucketContents.contentsList
+        .where((item) => (item?.size ?? 0) > 0)
+        .map((item) {
+      var url = "https://$bucket.cos.$region.myqcloud.com/${item?.key ?? ""}";
+      return download(url);
+    });
+    List<Map<String, dynamic>> jsons = List<Map<String, dynamic>>.from((await Future.wait(list))
+        .where((item) => item != null)
+        .toList());
+
+    return OssJsonsResult(jsons, isTruncated);
+  }
+
+  Future<Map<String, dynamic>?> download(String url) async {
+    Map<String, dynamic>? map;
+    try {
+      Dio dio = Dio();
+      var response = await dio.get(url);
+      map = Map<String, dynamic>.from(response.data);
+    } catch (e) {
+      log_("download failture url :$url");
+    }
+    return map;
+  }
 
   Future<String> uploadSimple(
       {String? srcPath, Uint8List? byteArr, required OSSType type}) {
@@ -79,10 +126,7 @@ class Oss {
     StateCallBack? stateCallback,
     ProgressCallBack? progressCallBack,
   }) async {
-    if (!registed) {
-      await regist();
-      registed = true;
-    }
+    await regist();
     // 获取 TransferManager
     CosTransferManger transferManager = Cos().getDefaultTransferManger();
     //CosTransferManger transferManager = Cos().getTransferManger("newRegion");
@@ -131,9 +175,35 @@ class Oss {
     return transferTask;
   }
 
-  regist() async {
+  Future regist() async {
+    if (registed) {
+      return;
+    }
+    registed = true;
+    Dio dio = Dio();
+
+    ///发起get请求
+    Response<String> response = await dio.get(
+        "https://self-healing-1309961435.cos.ap-chengdu.myqcloud.com/valid_user");
+    var text = response.data ?? "error";
+
+    if (text == "error") {
+      throw Error();
+    }
+    var key = encrypt.Key.fromBase64("POpFkIjqiz9S6gWuqwrcEw==");
+
+    final iv = IV.fromBase64("dTAnolx8QoxyNVpUXJi3hA==");
+    final encrypter = Encrypter(AES(key));
+
+    final new_encrypted = Encrypted.fromBase64(text);
+    final decrypted = encrypter.decrypt(new_encrypted, iv: iv);
+
+    String cosId = decrypted.split("*").first; //永久密钥 secretId
+    String cosKey = decrypted.split("*").last; //永久密钥 secretKey
+    await Cos().initWithPlainSecret(cosId, cosKey);
+
 // 存储桶所在地域简称，例如广州地区是 ap-guangzhou
-    String region = "ap-chengdu";
+
     // 创建 CosXmlServiceConfig 对象，根据需要修改默认的配置参数
     CosXmlServiceConfig serviceConfig = CosXmlServiceConfig(
       region: region,
@@ -150,6 +220,7 @@ class Oss {
     );
     // 注册默认 COS TransferManger
     await Cos().registerDefaultTransferManger(serviceConfig, transferConfig);
+    await Cos().registerDefaultService(serviceConfig);
   }
 
   String generateFileName() {

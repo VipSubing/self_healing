@@ -28,6 +28,8 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>程序需要访问相册才能继续工作</string>
+	<key>NSDocumentsDirectoryUsageDescription</key>
+	<string>程序需要访问本地存储才能继续工作</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

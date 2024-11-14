@@ -3,6 +3,7 @@ import 'package:self_healing/basic/const.dart';
 import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import 'package:self_healing/toolkit/extension/list.dart';
+import 'package:self_healing/toolkit/oss.dart';
 
 class MediaShopController extends GetxController {
   Rx<List<MindfulnessMediaModel>> list = () {
@@ -15,21 +16,23 @@ class MediaShopController extends GetxController {
   bool hasMore = false;
   var forceUpdate = 0.obs;
   int removeMediaAlertTime = 0;
-  
-  request(int page) async {
-    final jsons = defaultMediaJsonList;
+
+  Future request(int page) async {
+    var result = await Oss.shared.getJsons(page == 0);
+    hasMore = result.item2;
+
     if (page == 0) {
       this.totalList.clear();
     }
+    final jsons = result.item1;
     this.totalList.addAll(
         jsons.map((item) => MindfulnessMediaModel.fromJson(item)).toList());
 
     this.list.value = this.totalList;
     this.page = page;
   }
-  
+
   search(String text) {
-    
     list.value = totalList.findE((item, index) {
       if (item.name.contains(text) || item.type.name.contains(text)) {
         return true;

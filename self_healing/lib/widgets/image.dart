@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/widgets/brightness/builder.dart';
 
@@ -17,7 +19,22 @@ class NetImage extends StatelessWidget {
         width: width,
         height: height,
         color: isDark ? invertColor(color) : color,
-        child: verifySrc(src) ? Image.network(src!, fit: BoxFit.contain) : null,
+        child: verifySrc(src)
+            ? Center(
+                child: FutureBuilder(
+                  future: DefaultCacheManager().getSingleFile(src!),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<File> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return Image.file(snapshot.data!);
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ),
+              )
+            : null,
       );
     });
   }
