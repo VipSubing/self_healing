@@ -53,9 +53,8 @@ class Oss {
       var url = "https://$bucket.cos.$region.myqcloud.com/${item?.key ?? ""}";
       return download(url);
     });
-    List<Map<String, dynamic>> jsons = List<Map<String, dynamic>>.from((await Future.wait(list))
-        .where((item) => item != null)
-        .toList());
+    List<Map<String, dynamic>> jsons = List<Map<String, dynamic>>.from(
+        (await Future.wait(list)).where((item) => item != null).toList());
 
     return OssJsonsResult(jsons, isTruncated);
   }
@@ -131,7 +130,6 @@ class Oss {
     CosTransferManger transferManager = Cos().getDefaultTransferManger();
     //CosTransferManger transferManager = Cos().getTransferManger("newRegion");
     // 存储桶名称，由 bucketname-appid 组成，appid 必须填入，可以在 COS 控制台查看存储桶名称。 https://console.cloud.tencent.com/cos5/bucket
-    String bucket = "self-healing-1309961435";
     //若存在初始化分块上传的 UploadId，则赋值对应的 uploadId 值用于续传；否则，赋值 null
     String? _uploadId;
 
@@ -200,7 +198,7 @@ class Oss {
 
     String cosId = decrypted.split("*").first; //永久密钥 secretId
     String cosKey = decrypted.split("*").last; //永久密钥 secretKey
-    await Cos().initWithPlainSecret(cosId, cosKey);
+    // await Cos().initWithPlainSecret(cosId, cosKey);
 
 // 存储桶所在地域简称，例如广州地区是 ap-guangzhou
 
