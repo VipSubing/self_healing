@@ -225,6 +225,7 @@ class _ItemWidget extends StatelessWidget {
         children: [
           Text(
             name,
+            maxLines: 1,
             style: AppTextStyle.font14,
           ),
           const SizedBox(
@@ -246,10 +247,10 @@ class _ItemWidget extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                "199次收藏",
-                style: AppTextStyle.font12,
-              ),
+              // Text(
+              //   "199次收藏",
+              //   style: AppTextStyle.font12,
+              // ),
             ],
           )
         ],

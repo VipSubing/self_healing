@@ -11,8 +11,9 @@ class MindfulnessTips extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: LayoutBuilder(builder: (context, constraints) {
-        return BrightnessContainer(
+        return Container(
           height: 70,
+          padding: EdgeInsets.only(left: 20, right: 20),
           width: constraints.maxWidth,
           // padding: EdgeInsets.all(5),
           // decoration: BoxDecoration(
@@ -21,7 +22,8 @@ class MindfulnessTips extends StatelessWidget {
           child: Text(
             tipsText,
             maxLines: 3,
-            style: AppTextStyle.font16.copyWith(color: AppStyle.themeColor),
+            textAlign: TextAlign.center,
+            style: AppTextStyle.font20,
           ),
         );
       }),

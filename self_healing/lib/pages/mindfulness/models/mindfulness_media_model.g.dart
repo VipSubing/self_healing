@@ -32,11 +32,12 @@ Map<String, dynamic> _$MindfulnessMediaModelToJson(
 
 const _$MindfulnessMediaTypeEnumMap = {
   MindfulnessMediaType.other: '其他',
-  MindfulnessMediaType.soga: ' 瑜伽',
+  MindfulnessMediaType.soga: '瑜伽',
   MindfulnessMediaType.meditation: '静坐',
   MindfulnessMediaType.bodyScanning: '身体扫描',
   MindfulnessMediaType.walk: '行走',
   MindfulnessMediaType.breathe: '呼吸',
   MindfulnessMediaType.diet: '饮食',
   MindfulnessMediaType.compassion: '慈悲心',
+  MindfulnessMediaType.sport: '运动',
 };

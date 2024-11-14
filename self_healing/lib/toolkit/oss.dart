@@ -198,7 +198,7 @@ class Oss {
 
     String cosId = decrypted.split("*").first; //永久密钥 secretId
     String cosKey = decrypted.split("*").last; //永久密钥 secretKey
-    // await Cos().initWithPlainSecret(cosId, cosKey);
+    await Cos().initWithPlainSecret(cosId, cosKey);
 
 // 存储桶所在地域简称，例如广州地区是 ap-guangzhou
 

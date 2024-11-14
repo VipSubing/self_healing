@@ -18,7 +18,7 @@ class NetImage extends StatelessWidget {
       return Container(
         width: width,
         height: height,
-        color: isDark ? invertColor(color) : color,
+        color: verifySrc(src) ? null : (isDark ? invertColor(color) : color),
         child: verifySrc(src)
             ? Center(
                 child: FutureBuilder(
@@ -27,7 +27,10 @@ class NetImage extends StatelessWidget {
                       (BuildContext context, AsyncSnapshot<File> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
-                      return Image.file(snapshot.data!);
+                      return Image.file(
+                        snapshot.data!,
+                        fit: BoxFit.contain,
+                      );
                     } else {
                       return SizedBox();
                     }

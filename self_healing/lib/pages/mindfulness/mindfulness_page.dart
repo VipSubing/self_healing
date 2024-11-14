@@ -37,8 +37,10 @@ class MindfulnessPage extends GetView<MindfulnessController>
               "${controller.forceUpdate.value}";
               return Column(
                 children: [
-                  MindfulnessTips(
-                      tipsText: "MindfulnessTips\n2\n2", onPress: () {}),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MindfulnessTips(tipsText: "允许一切发生\n", onPress: () {}),
                   SizedBox(
                     height: 20,
                   ),

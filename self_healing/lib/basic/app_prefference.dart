@@ -22,6 +22,7 @@ class AppPrefference {
   init() {
     log_("AppPrefference load");
     _hive = Hive.box("prefference");
+    // _hive.clear();
   }
 
   /* These are attributes at prefference   */
@@ -66,7 +67,6 @@ class AppPrefference {
 
   List<MindfulnessMediaModel> get playList {
     List<dynamic> val = _hive.get("playList") ?? defaultMediaJsonList;
-    val = defaultMediaJsonList;
     List<Map<String, dynamic>> jsonList = val.map((item) {
       final json = item as Map<dynamic, dynamic>;
       return Map<String, dynamic>.from(json);
