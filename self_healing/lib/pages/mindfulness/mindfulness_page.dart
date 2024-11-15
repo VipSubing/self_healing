@@ -138,7 +138,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
 
   @override
   void mediaControlPlayOnCallback(bool currentPlaying) {
-    controller.mediaController.setupPlay(currentPlaying);
+    controller.mediaController.setupPlay(!currentPlaying);
   }
 
   @override

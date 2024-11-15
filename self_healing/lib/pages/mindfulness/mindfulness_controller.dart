@@ -18,7 +18,6 @@ class MindfulnessController extends GetxController
   var forceUpdate = 0.obs;
   int removeMediaAlertTime = 0;
 
-  
   MindfulnessController() {
     playIndex.value = AppPrefference.shared.currentMediaIndex;
     mediaList = Rx<List<MindfulnessMediaModel>>(AppPrefference.shared.playList);
@@ -115,5 +114,15 @@ class MindfulnessController extends GetxController
     }
     int index = mediaList.value.indexWhere((item) => item.src == src);
     playIndex.value = index;
+  }
+
+  @override
+  String? mediaControllerGetName(String src) {
+    for (var i = 0; i < mediaList.value.length; i++) {
+      if (mediaList.value[i].src == src) {
+        return mediaList.value[i].name;
+      }
+    }
+    return null;
   }
 }

@@ -5,12 +5,14 @@ import 'package:self_healing/basic/app_info.dart';
 import 'package:self_healing/basic/app_prefference.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:self_healing/pages/mindfulness/other/audio/audio.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox(AppPrefference.prefferenceBox);
+  await initAudioService();
   log_("app will loads");
   runApp(const MyApp());
 }

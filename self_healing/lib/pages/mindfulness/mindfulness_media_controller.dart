@@ -1,18 +1,22 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:self_healing/basic/app_prefference.dart';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:self_healing/basic/globals.dart';
+import 'package:self_healing/pages/mindfulness/other/audio/audio.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class MindfulnessMediaControllerDelegate {
   /// 准备播放
   void mediaControllerPreparePlay(String src);
+  String? mediaControllerGetName(String src);
 }
 
-class MindfulnessMediaController extends GetxController {
+class MindfulnessMediaController extends GetxController
+    implements AudioHandlerDelegate {
   final MindfulnessMediaControllerDelegate delegate;
 
   final audioPlayer = AudioPlayer();
@@ -44,7 +48,7 @@ class MindfulnessMediaController extends GetxController {
     required this.delegate,
   }) {
     mode = _MediaMode.fromRaw(AppPrefference.shared.playerMode).obs;
-
+    MyAudioHandler.shared.player = WeakReference(this);
     audioPlayer.onDurationChanged.listen((Duration d) {
       setupTotalSecs(d.inSeconds);
     });
@@ -53,8 +57,10 @@ class MindfulnessMediaController extends GetxController {
     });
     audioPlayer.onPlayerStateChanged.listen((PlayerState s) {
       isPlaying.value = s == PlayerState.playing;
+      MyAudioHandler.shared.resetAudioServiceState(playing: isPlaying.value);
+
       if (s == PlayerState.completed) {
-        playNext(playedList.last);
+        playNext();
       }
     });
     audioPlayer.onPlayerComplete.listen((_) {
@@ -78,7 +84,7 @@ class MindfulnessMediaController extends GetxController {
     super.onClose();
   }
 
-  mediaSetup({
+  Future mediaSetup({
     int secs_ = 0,
     required String src,
     bool autoPlay = true,
@@ -86,16 +92,29 @@ class MindfulnessMediaController extends GetxController {
     secs = secs_;
     redrawSlider();
     playHistory(src);
+    delegate.mediaControllerPreparePlay(src);
 
-    
+    var item = MediaItem(
+      id: src,
+      title: delegate.mediaControllerGetName(src) ?? "",
+      duration: const Duration(seconds: 0),
+      // artUri: Uri.parse('https://example.com/album.jpg'),
+    );
+
+    MyAudioHandler.shared.resetItem(item);
+    // MyAudioHandler.shared.playMediaItem(item);
+
+    MyAudioHandler.shared
+        .resetAudioServiceState(playing: false, controls: _getControls());
 
     await setSource(src);
+
     await audioPlayer.seek(Duration(seconds: secs));
     if (autoPlay) {
-      audioPlayer.resume();
+      await audioPlayer.resume();
     } else {
       if (audioPlayer.state == PlayerState.playing) {
-        audioPlayer.pause();
+        await audioPlayer.pause();
       }
     }
   }
@@ -114,7 +133,17 @@ class MindfulnessMediaController extends GetxController {
     playList = playList_;
   }
 
-  playNext(String curSrc) {
+  Future playPrevious() async {
+    if (playedList.length >= 2 && playList.length >= 2) {
+      String src = playedList[playedList.length - 2];
+      if (playList.contains(src)) {
+        await mediaSetup(src: src);
+      }
+    }
+  }
+
+  Future playNext() async {
+    String curSrc = playedList.last;
     log_("playNext curSrc :${curSrc}");
     String? nextMedia;
     switch (mode.value) {
@@ -181,8 +210,7 @@ class MindfulnessMediaController extends GetxController {
         break;
     }
     if (nextMedia != null) {
-      mediaSetup(secs_: 0, src: nextMedia);
-      delegate.mediaControllerPreparePlay(nextMedia);
+      await mediaSetup(secs_: 0, src: nextMedia);
     }
   }
 
@@ -197,34 +225,47 @@ class MindfulnessMediaController extends GetxController {
   setupMode(int modeRaw) {
     mode.value = _MediaMode.fromRaw(modeRaw).nextMode();
     AppPrefference.shared.playerMode = mode.value.raw;
+
+    MyAudioHandler.shared.resetAudioServiceState(controls: _getControls());
   }
 
-  setupPlay(bool isPlaying_) {
-    if (!isPlaying_) {
+  Future setupPlay(bool play) async {
+    if (play) {
       if (exception != null) {
-        setSource(playedList.last);
+        await setSource(playedList.last);
       }
-      audioPlayer.resume();
+      await audioPlayer.resume();
     } else {
-      audioPlayer.pause();
+      await audioPlayer.pause();
     }
   }
 
   // slider进度回调
-  setupVal(double destinationVal) {
+  Future setupVal(double destinationVal) async {
     // 更新player
     secs = (destinationVal / 100.0 * totalSecs).toInt();
     // logDebug("setupVal secs: ${formatSeconds(secs)}");
-    audioPlayer.seek(Duration(seconds: secs));
+    await audioPlayer.seek(Duration(seconds: secs));
   }
 
   // 播放器进度回调
   setupSecs(int secs_) {
+    MyAudioHandler.shared
+        .resetAudioServiceState(updatePosition: Duration(seconds: secs_));
     secs = secs_;
     redrawSlider();
   }
 
+  // 设置时长
   setupTotalSecs(int secs_) {
+    var item = MediaItem(
+      id: playedList.last,
+      title: delegate.mediaControllerGetName(playedList.last) ?? "",
+      duration: Duration(seconds: secs_),
+      // artUri: Uri.parse('https://example.com/album.jpg'),
+    );
+
+    MyAudioHandler.shared.resetItem(item);
     totalSecs = secs_;
     redrawSlider();
   }
@@ -232,6 +273,64 @@ class MindfulnessMediaController extends GetxController {
   // 更新Slider
   redrawSlider() {
     forceUpdate.value = 1 + forceUpdate.value;
+  }
+
+  /* 
+    AudioHandlerDelegate
+   */
+  @override
+  Future audioServicePause() async {
+    await setupPlay(false);
+  }
+
+  @override
+  Future audioServicePlay() async {
+    await setupPlay(true);
+  }
+
+  @override
+  Future audioServiceSeek(Duration position) async {
+    if (totalSecs <= 0) {
+      return;
+    }
+    double val = position.inSeconds / totalSecs * 100;
+    await setupVal(val);
+  }
+
+  @override
+  Future audioServiceStop() async {}
+  @override
+  Future audioServiceSkipToNext() async {
+    return await playNext();
+  }
+
+  @override
+  Future audioServiceSkipToPrevious() async {
+    return await playPrevious();
+  }
+
+  @override
+  Future audioServiceClick() async {
+    setupPlay(!isPlaying.value);
+  }
+
+  /* 
+    private
+   */
+  List<MediaControl> _getControls() {
+    if (mode.value == _MediaMode.one || mode.value == _MediaMode.perOne) {
+      return [MediaControl.pause, MediaControl.play];
+    }
+    if (mode.value == _MediaMode.circulation ||
+        mode.value == _MediaMode.random && playList.length > 1) {
+      return [
+        MediaControl.pause,
+        MediaControl.play,
+        MediaControl.skipToNext,
+        MediaControl.skipToPrevious
+      ];
+    }
+    return [MediaControl.pause, MediaControl.play];
   }
 }
 
