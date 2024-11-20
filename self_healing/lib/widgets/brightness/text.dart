@@ -3,7 +3,7 @@ import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/widgets/brightness/builder.dart';
 
 class BrightnessText extends StatelessWidget {
-  BrightnessText(
+  const BrightnessText(
     this.data, {
     super.key,
     this.style,

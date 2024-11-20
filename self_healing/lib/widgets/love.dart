@@ -23,7 +23,9 @@ class LoveWidget extends StatelessWidget {
         onPressed: () => onPress(isLoved),
         style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent),
+            overlayColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent),
         child: BrightnessBuilder(builder: (context, isBlank) {
           return Image.asset(
             // width: 20,
@@ -31,7 +33,9 @@ class LoveWidget extends StatelessWidget {
             "assets/icons/love_icon.png",
             color: isLoved
                 ? Colors.red
-                : (isBlank ? Colors.white : Color.fromARGB(255, 154, 154, 154)),
+                : (isBlank
+                    ? Colors.white
+                    : const Color.fromARGB(255, 154, 154, 154)),
             colorBlendMode: BlendMode.srcIn,
           );
         }),

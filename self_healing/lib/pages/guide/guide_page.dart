@@ -6,7 +6,7 @@ import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 
 class GuidePage extends GetView {
-  GuidePage({super.key});
+  const GuidePage({super.key});
 
   @override
   Widget build(BuildContext context) {

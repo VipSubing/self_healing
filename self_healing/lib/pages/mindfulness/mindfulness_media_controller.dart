@@ -1,24 +1,22 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:self_healing/basic/app_prefference.dart';
 import 'dart:math';
 import 'package:get/get.dart';
-import 'package:self_healing/basic/globals.dart';
+import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import 'package:self_healing/pages/mindfulness/other/audio/audio.dart';
+import 'package:self_healing/pages/mindfulness/other/audio/store.dart';
 import 'package:self_healing/toolkit/log.dart';
-import 'package:tuple/tuple.dart';
 
 abstract class MindfulnessMediaControllerDelegate {
   /// 准备播放
   void mediaControllerPreparePlay(String src);
-  String? mediaControllerGetName(String src);
+  MindfulnessMediaModel? mediaControllerGetName(String src);
 }
 
-class MindfulnessMediaController extends GetxController
-    implements AudioHandlerDelegate {
+class MindfulnessMediaController implements AudioHandlerDelegate {
   final MindfulnessMediaControllerDelegate delegate;
-
+  final store = MindfulessStore.shared;
   final audioPlayer = AudioPlayer();
 
   late Rx<_MediaMode> mode;
@@ -29,12 +27,11 @@ class MindfulnessMediaController extends GetxController
   // 已经播放过的
   List<String> playedList = [];
 
-  var secs = 0;
-  var totalSecs = 0;
-
-  var forceUpdate = 0.obs;
+  var secs = 0.obs;
+  var totalSecs = 0.obs;
 
   Object? exception;
+  MindfulnessMediaModel? media;
 
   CacheManager cacheManager = CacheManager(
     Config(
@@ -47,7 +44,7 @@ class MindfulnessMediaController extends GetxController
   MindfulnessMediaController({
     required this.delegate,
   }) {
-    mode = _MediaMode.fromRaw(AppPrefference.shared.playerMode).obs;
+    mode = _MediaMode.fromRaw(store.playerMode).obs;
     MyAudioHandler.shared.player = WeakReference(this);
     audioPlayer.onDurationChanged.listen((Duration d) {
       setupTotalSecs(d.inSeconds);
@@ -67,21 +64,11 @@ class MindfulnessMediaController extends GetxController
       log_("audioPlayer 播放完成");
     });
 
-    audioPlayer.setReleaseMode(ReleaseMode.stop);
-  }
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    log_("MindfulnessMediaController dispose");
-    // TODO: implement dispose
-    super.dispose();
+    audioPlayer.setReleaseMode(ReleaseMode.release);
   }
 
-  @override
-  onClose() {
+  disposeAudio() {
     audioPlayer.dispose();
-    log_("MindfulnessMediaController onClose");
-    super.onClose();
   }
 
   Future mediaSetup({
@@ -89,16 +76,21 @@ class MindfulnessMediaController extends GetxController
     required String src,
     bool autoPlay = true,
   }) async {
-    secs = secs_;
-    redrawSlider();
+    log_("play audio src:$src");
+    // await audioPlayer.stop();
+
+    secs.trigger(secs_);
+
     playHistory(src);
     delegate.mediaControllerPreparePlay(src);
 
+    media = delegate.mediaControllerGetName(src);
+
     var item = MediaItem(
-      id: src,
-      title: delegate.mediaControllerGetName(src) ?? "",
+      id: "id$src",
+      title: media?.name ?? "",
       duration: const Duration(seconds: 0),
-      // artUri: Uri.parse('https://example.com/album.jpg'),
+      artUri: media?.cover != null ? Uri.parse(media!.cover!) : null,
     );
 
     MyAudioHandler.shared.resetItem(item);
@@ -109,7 +101,7 @@ class MindfulnessMediaController extends GetxController
 
     await setSource(src);
 
-    await audioPlayer.seek(Duration(seconds: secs));
+    await audioPlayer.seek(Duration(seconds: secs.value));
     if (autoPlay) {
       await audioPlayer.resume();
     } else {
@@ -144,7 +136,7 @@ class MindfulnessMediaController extends GetxController
 
   Future playNext() async {
     String curSrc = playedList.last;
-    log_("playNext curSrc :${curSrc}");
+    log_("playNext curSrc :$curSrc");
     String? nextMedia;
     switch (mode.value) {
       case _MediaMode.one:
@@ -224,7 +216,7 @@ class MindfulnessMediaController extends GetxController
   /* ui */
   setupMode(int modeRaw) {
     mode.value = _MediaMode.fromRaw(modeRaw).nextMode();
-    AppPrefference.shared.playerMode = mode.value.raw;
+    store.playerMode = mode.value.raw;
 
     MyAudioHandler.shared.resetAudioServiceState(controls: _getControls());
   }
@@ -243,36 +235,29 @@ class MindfulnessMediaController extends GetxController
   // slider进度回调
   Future setupVal(double destinationVal) async {
     // 更新player
-    secs = (destinationVal / 100.0 * totalSecs).toInt();
+    secs.value = (destinationVal / 100.0 * totalSecs.value).toInt();
     // logDebug("setupVal secs: ${formatSeconds(secs)}");
-    await audioPlayer.seek(Duration(seconds: secs));
+    await audioPlayer.seek(Duration(seconds: secs.value));
   }
 
   // 播放器进度回调
   setupSecs(int secs_) {
     MyAudioHandler.shared
         .resetAudioServiceState(updatePosition: Duration(seconds: secs_));
-    secs = secs_;
-    redrawSlider();
+    secs.trigger(secs_);
   }
 
   // 设置时长
   setupTotalSecs(int secs_) {
     var item = MediaItem(
-      id: playedList.last,
-      title: delegate.mediaControllerGetName(playedList.last) ?? "",
+      id: "id${playedList.last}",
+      title: media?.name ?? "",
       duration: Duration(seconds: secs_),
-      // artUri: Uri.parse('https://example.com/album.jpg'),
+      artUri: media?.cover != null ? Uri.parse(media!.cover!) : null,
     );
 
     MyAudioHandler.shared.resetItem(item);
-    totalSecs = secs_;
-    redrawSlider();
-  }
-
-  // 更新Slider
-  redrawSlider() {
-    forceUpdate.value = 1 + forceUpdate.value;
+    totalSecs.trigger(secs_);
   }
 
   /* 
@@ -293,7 +278,7 @@ class MindfulnessMediaController extends GetxController
     if (totalSecs <= 0) {
       return;
     }
-    double val = position.inSeconds / totalSecs * 100;
+    double val = position.inSeconds / totalSecs.value * 100;
     await setupVal(val);
   }
 

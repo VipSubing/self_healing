@@ -14,7 +14,6 @@ import 'package:logger/logger.dart';
 // }
 import 'dart:developer';
 
-import 'package:logger/logger.dart';
 
 class DeveloperConsoleOutput extends LogOutput {
   @override

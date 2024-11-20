@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:self_healing/basic/app_style.dart';
 
 class TagW extends StatefulWidget {
-  TagW({
+  const TagW({super.key, 
     this.padding,
     required this.text,
     this.borderRadius,
@@ -48,20 +48,20 @@ class _TagWState extends State<TagW> with WidgetsBindingObserver {
     return Container(
       padding: widget.padding != null
           ? widget.padding!
-          : EdgeInsets.fromLTRB(5, 2, 5, 2),
+          : const EdgeInsets.fromLTRB(5, 2, 5, 2),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
               widget.borderRadius != null ? widget.borderRadius! : 4),
           color:
               WidgetsBinding.instance.platformDispatcher.platformBrightness ==
                       Brightness.dark
-                  ? Color.fromARGB(255, 63, 63, 63)
+                  ? const Color.fromARGB(255, 63, 63, 63)
                   : const Color.fromARGB(31, 66, 66, 66)),
       child: Text(
         widget.text,
         textAlign: TextAlign.center,
         style:
-            widget.textStyle != null ? widget.textStyle : AppTextStyle.font12,
+            widget.textStyle ?? AppTextStyle.font12,
       ),
     );
   }

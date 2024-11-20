@@ -33,7 +33,7 @@ class Guide1Page extends GetView<Guide1Controller> {
                         log_("press anxiety at $index");
                         controller.levelOfAnxiety.value = index;
                       }),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _Guide1Card(
@@ -44,7 +44,7 @@ class Guide1Page extends GetView<Guide1Controller> {
                         log_("press depression at $index");
                         controller.levelOfDepression.value = index;
                       }),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _Guide1Card(
@@ -55,7 +55,7 @@ class Guide1Page extends GetView<Guide1Controller> {
                         log_("press panic attack at $index");
                         controller.panicAttack.value = index;
                       }),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _Guide1SomatizationWidget(
@@ -66,7 +66,7 @@ class Guide1Page extends GetView<Guide1Controller> {
                       controller.numOfSomatization.value = index;
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 60,
                   ),
                   ElevatedButton(
@@ -86,7 +86,7 @@ class Guide1Page extends GetView<Guide1Controller> {
                               ]);
                             }
                           : null,
-                      child: Text("获取治愈计划"))
+                      child: const Text("获取治愈计划"))
                 ],
               );
             }),
@@ -98,9 +98,8 @@ class Guide1Page extends GetView<Guide1Controller> {
 }
 
 class _Guide1Card extends StatelessWidget {
-  _Guide1Card(
-      {super.key,
-      required this.title,
+  const _Guide1Card(
+      {required this.title,
       required this.list,
       this.selectedIndex,
       required this.onPress});
@@ -122,7 +121,7 @@ class _Guide1Card extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              this.title,
+              title,
               style: AppTextStyle.font18.weight600(),
             ),
             const SizedBox(
@@ -139,14 +138,14 @@ class _Guide1Card extends StatelessWidget {
   Widget _rowWidget(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
     Color _borderColor(int level) {
-      return level == this.selectedIndex
+      return level == selectedIndex
           ? Theme.of(context).primaryColor
           : const Color.fromARGB(0, 0, 0, 0);
     }
 
     // ignore: no_leading_underscores_for_local_identifiers
     Color? _textColor(int level) {
-      return level == this.selectedIndex
+      return level == selectedIndex
           ? Theme.of(context).primaryColor
           : null;
     }
@@ -175,7 +174,7 @@ class _Guide1Card extends StatelessWidget {
                         border: Border.all(
                             width: 3, color: _borderColor(model.level))),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     model.name,
                     textAlign: TextAlign.center,
@@ -193,9 +192,8 @@ class _Guide1Card extends StatelessWidget {
 }
 
 class _Guide1SomatizationWidget extends StatelessWidget {
-  _Guide1SomatizationWidget(
-      {super.key,
-      required this.title,
+  const _Guide1SomatizationWidget(
+      {required this.title,
       required this.list,
       this.selectedIndex,
       required this.onPress});

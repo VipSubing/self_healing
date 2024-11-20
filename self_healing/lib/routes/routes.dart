@@ -6,6 +6,7 @@ import 'package:self_healing/pages/index/index_page.dart';
 import 'package:self_healing/pages/mindfulness/pages/create/media_create_page.dart';
 import 'package:self_healing/pages/mindfulness/pages/details/media_details_page.dart';
 import 'package:self_healing/pages/mindfulness/pages/shop/media_shop_page.dart';
+import 'package:self_healing/pages/mindfulness/pages/tips/tips_page.dart';
 
 class Routes {
   static Routes? _shared;
@@ -23,11 +24,11 @@ class Routes {
   static String mindfulnessShop = "mindfulnessShop";
   static String mindfulnessDetails = "mindfulnessDetails";
   static String mindfulnessCreate = "mindfulnessCreate";
-
+  static String mindfulnessTips = "mindfulnessTips";
   Map<String, WidgetBuilder> pages() {
     return {
       // 引导页面
-      guide: (context) => (GuidePage()),
+      guide: (context) => (const GuidePage()),
       // 引导页面1
       guide1: (context) => (Guide1Page()),
       // 引导页面2
@@ -40,7 +41,8 @@ class Routes {
       mindfulnessDetails: (context) => (MediaDetailsPage()),
       // 创建
       mindfulnessCreate: (context) => (MediaCreatePage()),
-      
+      // 正念Tips
+      mindfulnessTips: (context) => (const TipsPage()),
     };
   }
 }

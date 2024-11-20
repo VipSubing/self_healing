@@ -4,8 +4,8 @@ import 'package:self_healing/widgets/love.dart';
 import 'package:self_healing/widgets/tag_w.dart';
 
 class MindfulnessInfoW extends StatefulWidget {
-  MindfulnessInfoW(
-      {this.cover,
+  const MindfulnessInfoW(
+      {super.key, this.cover,
       required this.name,
       required this.time,
       required this.tag,
@@ -55,7 +55,7 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
                 // color: Colors.black38,
                 ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Row(
@@ -79,11 +79,16 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          name,
-          style: AppTextStyle.font18.weight700(),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 300),
+          child: Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.clip,
+            style: AppTextStyle.font18.weight700(),
+          ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Row(
@@ -92,7 +97,7 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
               time,
               style: AppTextStyle.font14,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             TagW(

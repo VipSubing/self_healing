@@ -1,26 +1,33 @@
 import 'package:get/get.dart';
-import 'package:self_healing/basic/app_prefference.dart';
 import 'package:self_healing/pages/mindfulness/mindfulness_media_controller.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
+import 'package:self_healing/pages/mindfulness/other/audio/store.dart';
 import 'package:self_healing/toolkit/extension/list.dart';
 import 'package:self_healing/toolkit/log.dart';
 
-class MindfulnessController extends GetxController
+class MindfulnessService extends GetxService
     implements MindfulnessMediaControllerDelegate {
+  final store = MindfulessStore.shared;
   late Rx<MindfulnessMediaModel> media;
-  Rx<int> playIndex = () {
-    Rx<int> rx = 0.obs;
-    rx.equalityRebuild = true;
-    return rx;
-  }();
+
+  static bool inited = false;
+
+  static MindfulnessService shared() {
+    if (!inited) {
+      inited = true;
+      Get.put(MindfulnessService());
+    }
+    return Get.find<MindfulnessService>();
+  }
+
+  Rx<int> playIndex = 0.obs;
   late Rx<List<MindfulnessMediaModel>> mediaList;
   late MindfulnessMediaController mediaController;
-  var forceUpdate = 0.obs;
   int removeMediaAlertTime = 0;
-
-  MindfulnessController() {
-    playIndex.value = AppPrefference.shared.currentMediaIndex;
-    mediaList = Rx<List<MindfulnessMediaModel>>(AppPrefference.shared.playList);
+  int statisticsTime = 0;
+  MindfulnessService() {
+    playIndex.value = store.currentMediaIndex;
+    mediaList = Rx<List<MindfulnessMediaModel>>(store.playList);
     if (mediaList.value.length <= playIndex.value) {
       playIndex.value = 0;
     }
@@ -32,6 +39,17 @@ class MindfulnessController extends GetxController
       return item.src;
     }));
     mediaController.mediaSetup(src: media.value.src, autoPlay: false);
+
+    mediaController.isPlaying.listen((isPlaying) {
+      int time = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      if (isPlaying) {
+        statisticsTime = time;
+      } else {
+        if (statisticsTime != 0) {
+          store.historyTime += time - statisticsTime;
+        }
+      }
+    });
   }
   @override
   onInit() {
@@ -41,13 +59,19 @@ class MindfulnessController extends GetxController
         return item.src;
       }));
       logDebug("set mediaList:${_.map((item) => item.name)}", methodCount: 3);
-      AppPrefference.shared.playList = mediaList.value;
+      store.playList = mediaList.value;
     });
     ever(playIndex, (_) {
       log_("set playIndex:$_");
       media.value = mediaList.value[playIndex.value];
-      AppPrefference.shared.currentMediaIndex = playIndex.value;
+      store.currentMediaIndex = playIndex.value;
     });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    mediaController.disposeAudio();
   }
 
   //播放
@@ -55,8 +79,6 @@ class MindfulnessController extends GetxController
     if (media.src == this.media.value.src) {
       return;
     }
-    int index = mediaList.value.indexWhere((item) => item.src == media.src);
-    playIndex.value = index;
     mediaController.mediaSetup(src: media.src, autoPlay: autoPlay);
   }
 
@@ -68,8 +90,8 @@ class MindfulnessController extends GetxController
 
   // 重排
   setupReorder(List<MindfulnessMediaModel> list) {
-    mediaList.value = list.copyE();
-    playIndex.value = list.indexWhere((item) => item.isPlaying);
+    mediaList.trigger(list);
+    playIndex.trigger(list.indexWhere((item) => item.isPlaying));
   }
 
   setupAddPlay(MindfulnessMediaModel media) {
@@ -82,14 +104,14 @@ class MindfulnessController extends GetxController
     if (isLoved) {
       if (!mediaList.value.contains(media)) {
         mediaList.value.insert(0, media.copy());
-        mediaList.value = mediaList.value.copyE();
+        mediaList.update((_) {});
         playIndex.value += 1;
       }
     } else {
       int index = mediaList.value.indexOf(media);
       if (index != -1 && mediaList.value.length > 1) {
         mediaList.value.removeAt(index);
-        mediaList.value = mediaList.value.copyE();
+        mediaList.update((_) {});
         if (playIndex.value == index) {
           // 正在播放这个Media,切换到下一个
           if (playIndex.value >= mediaList.value.length) {
@@ -109,18 +131,19 @@ class MindfulnessController extends GetxController
   /* MindfulnessMediaControllerDelegate */
   @override
   void mediaControllerPreparePlay(String src) {
-    if (media.value.src == src) {
-      return;
-    }
+    var map = store.historyStatistics;
+    map[src] = (map[src] ?? 0) + 1;
+    store.historyStatistics = map;
+
     int index = mediaList.value.indexWhere((item) => item.src == src);
-    playIndex.value = index;
+    playIndex.trigger(index);
   }
 
   @override
-  String? mediaControllerGetName(String src) {
+  MindfulnessMediaModel? mediaControllerGetName(String src) {
     for (var i = 0; i < mediaList.value.length; i++) {
       if (mediaList.value[i].src == src) {
-        return mediaList.value[i].name;
+        return mediaList.value[i];
       }
     }
     return null;

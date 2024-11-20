@@ -3,24 +3,33 @@ import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/widgets/brightness/builder.dart';
 import 'package:self_healing/widgets/button.dart';
 
-showAlert(BuildContext context,
+showPlainAlert(BuildContext context,
     {required String title,
     required String content,
     required Function() sureCallback}) {
+  showAlert(context,
+      title: Text(
+        title,
+        // textAlign: TextAlign.center,
+        style: AppTextStyle.font24.weight600(),
+      ),
+      content: Text(
+        content,
+        style: AppTextStyle.font18,
+      ),
+      sureCallback: sureCallback);
+}
+
+showAlert(BuildContext context,
+    {Widget? title, Widget? content, required Function() sureCallback}) {
   showDialog(
       context: context,
       builder: (context) {
         return BrightnessBuilder(builder: (context, isDark) {
           return AlertDialog(
-            title: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: AppTextStyle.font20.weight600(),
-            ),
-            content: Text(
-              content,
-              style: AppTextStyle.font16,
-            ),
+            title: title,
+            content: SizedBox(
+                width: MediaQuery.of(context).size.width - 50, child: content),
             backgroundColor: AppStyle.background1Color(isDark),
             elevation: 24,
             shape: RoundedRectangleBorder(
@@ -32,14 +41,14 @@ showAlert(BuildContext context,
                     Navigator.of(context).pop('cancle');
                   },
                   title: "取消",
-                  size: Size(100, 40)),
+                  size: const Size(120, 54)),
               MeTextButton.one(
                   onPress: () {
                     Navigator.of(context).pop("ok");
                     sureCallback();
                   },
                   title: "确认",
-                  size: Size(100, 40)),
+                  size: const Size(120, 54)),
             ],
           );
         });

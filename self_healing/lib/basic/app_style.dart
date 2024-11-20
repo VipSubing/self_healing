@@ -54,7 +54,7 @@ class AppStyle {
   }
 
   static Color borderLineColor(bool isDark) {
-    final color = Color.fromARGB(255, 202, 197, 197);
+    final color = const Color.fromARGB(255, 202, 197, 197);
     return isDark ? invertColor(color) : color;
   }
 
@@ -66,7 +66,7 @@ class AppStyle {
     return isDark ? Colors.black : const Color.fromARGB(255, 241, 244, 247);
   }
 
-  static Color themeColor = Color.fromARGB(255, 4, 239, 117);
+  static Color themeColor = const Color.fromARGB(255, 4, 239, 117);
 
   ThemeData? _light;
   // app 初始化解阶段调用
@@ -160,7 +160,7 @@ class AppStyle {
 }
 
 class AppTextStyle extends TextStyle {
-  AppTextStyle(
+  const AppTextStyle(
       {super.fontSize, super.fontFamily, super.fontWeight, super.color});
 
   AppTextStyle copy(
@@ -182,8 +182,8 @@ class AppTextStyle extends TextStyle {
     final isDark =
         WidgetsBinding.instance.platformDispatcher.platformBrightness ==
             Brightness.dark;
-    final _darkColor = darkColor ?? invertColor(color);
-    return copy(color: isDark ? _darkColor : color);
+    final darkColor0 = darkColor ?? invertColor(color);
+    return copy(color: isDark ? darkColor0 : color);
   }
 
   AppTextStyle weight200() {

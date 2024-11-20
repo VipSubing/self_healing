@@ -244,6 +244,7 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   /// true first.
   ///
   /// This should only be used between frames, not during build.
+  @override
   bool get popGestureEnabled => _isPopGestureEnabled(this);
 
   /// True if an iOS-style back swipe pop gesture is currently
@@ -255,6 +256,7 @@ mixin GetPageRouteTransitionMixin<T> on PageRoute<T> {
   ///    is currently underway for specific route.
   ///  * [popGestureEnabled], which returns true if a user-triggered pop gesture
   ///    would be allowed.
+  @override
   bool get popGestureInProgress => isPopGestureInProgress(this);
 
   /// The title string of the previous [CupertinoPageRoute].

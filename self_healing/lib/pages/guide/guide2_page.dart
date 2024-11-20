@@ -15,7 +15,7 @@ import 'package:self_healing/widgets/brightness/builder.dart';
 import 'package:self_healing/widgets/brightness/container.dart';
 
 class Guide2Page extends GetView {
-  Guide2Page({super.key}) : this.modelList = Get.arguments;
+  Guide2Page({super.key}) : modelList = Get.arguments;
 
   final totalPlanModels = [
     _PlanItem(
@@ -30,13 +30,13 @@ class Guide2Page extends GetView {
         icon: "assets/icons/mindfulness_tab.png",
         exposition: "正念Mindfulness，正在飞速发展的治疗焦虑抑郁的工具，经过长期的科学实践，对改善焦虑抑郁非常有效。",
         grade: 1,
-        iconColor: Color.fromARGB(255, 79, 242, 131)),
+        iconColor: const Color.fromARGB(255, 79, 242, 131)),
     _PlanItem(
         name: "CBT",
         icon: "assets/icons/cbt_tab.png",
         exposition: "认知行为疗法(CBT)，源自于心理咨询，针对人格中的不合理信念和错误认知有纠正作用，从而改善焦虑。",
         grade: 0,
-        iconColor: Color.fromARGB(255, 79, 218, 242)),
+        iconColor: const Color.fromARGB(255, 79, 218, 242)),
     _PlanItem(
         name: "支持",
         icon: "assets/icons/society_tab.png",
@@ -48,14 +48,14 @@ class Guide2Page extends GetView {
         icon: "assets/icons/sport_tab.png",
         exposition: "运动过程释放多巴胺，缓解紧张，放松大脑",
         grade: 0,
-        iconColor: Color.fromARGB(255, 224, 14, 14)),
+        iconColor: const Color.fromARGB(255, 224, 14, 14)),
   ];
 
   final List<LevelOfSpiritModel> modelList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("治愈计划")),
+      appBar: AppBar(title: const Text("治愈计划")),
       body: ListView(children: [
         Padding(
           padding: EdgeInsets.fromLTRB(
@@ -73,7 +73,7 @@ class Guide2Page extends GetView {
               // _conditionW(
               //     context, "躯体症", Get.arguments[2] as LevelOfSpiritModel, true),
               _stateW(context, modelList),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Text(
@@ -83,7 +83,7 @@ class Guide2Page extends GetView {
               ..._itemModels().map((itemModel) {
                 return _planItemW(context, itemModel);
               }),
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               ElevatedButton(
@@ -92,7 +92,7 @@ class Guide2Page extends GetView {
                     AppPrefference.shared.isFirstLoad = false;
                     Get.offAllNamed(Routes.index);
                   },
-                  child: Text("治愈"))
+                  child: const Text("治愈"))
             ],
           ),
         )
@@ -101,7 +101,7 @@ class Guide2Page extends GetView {
   }
 
   Widget _stateW(BuildContext context, List<LevelOfSpiritModel> list) {
-    Widget _circleWidget(
+    Widget circleWidget(
         BuildContext context, LevelOfSpiritModel model, String text) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -114,7 +114,7 @@ class Guide2Page extends GetView {
               color: model.color,
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(text, textAlign: TextAlign.center, style: AppTextStyle.font16),
         ],
       );
@@ -144,11 +144,11 @@ class Guide2Page extends GetView {
               children: [
                 ...topList.mapE((model, i) {
                   // log_(i);
-                  return _circleWidget(context, model, topTextList[i]);
+                  return circleWidget(context, model, topTextList[i]);
                 })
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Text(
@@ -204,10 +204,10 @@ class Guide2Page extends GetView {
   // plan item
   Widget _planItemW(BuildContext context, _PlanItem itemModel) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       child: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Container(
@@ -219,7 +219,7 @@ class Guide2Page extends GetView {
               color: AppStyle.themeColor,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Expanded(child: BrightnessBuilder(builder: (context, isDark) {
@@ -235,7 +235,7 @@ class Guide2Page extends GetView {
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _planItem_headerW(context, itemModel),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Expanded(
@@ -245,7 +245,7 @@ class Guide2Page extends GetView {
                       softWrap: true,
                       maxLines: null,
                     )),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     SizedBox(
@@ -274,7 +274,7 @@ class Guide2Page extends GetView {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
             color: itemModel.iconColor,
           ),
           child: Center(

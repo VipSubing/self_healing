@@ -9,13 +9,13 @@ String formatSeconds(int seconds) {
   String text =
       "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   if (hours > 0) {
-    text = "${hours.toString().padLeft(2, '0')}:" + text;
+    text = "${hours.toString().padLeft(2, '0')}:$text";
   }
   return text;
 }
 
 String formatMinutes(int seconds) {
-  return "${(seconds / 60).toInt()}分钟";
+  return "${seconds ~/ 60}分钟";
 }
 
 Color invertColor(Color color) {

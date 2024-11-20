@@ -2,8 +2,6 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
-import 'package:self_healing/toolkit/log.dart';
-import 'package:tuple/tuple.dart';
 
 abstract class MindfulnessControlWDelegate {
   void mediaControlModeOnCallback(int currentMode);
@@ -40,7 +38,7 @@ class MindfulnessControlW extends StatelessWidget {
           totalSecs: totalSecs,
           callback: delegate.mediaControlSliderValOnCallback,
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         _ButtonsBoardW(
@@ -56,7 +54,7 @@ class MindfulnessControlW extends StatelessWidget {
 }
 
 class _ButtonsBoardW extends StatefulWidget {
-  _ButtonsBoardW(
+  const _ButtonsBoardW(
       {required this.mode,
       required this.playing,
       required this.onPlayCallback,
@@ -128,10 +126,10 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
               onPress: () {
                 widget.onModeCallback(widget.mode);
               },
-              size: Size(25, 25),
-              padding: EdgeInsets.all(15)),
+              size: const Size(25, 25),
+              padding: const EdgeInsets.all(15)),
 
-          Spacer(),
+          const Spacer(),
           // _playerBtnW(
           //     icon: "assets/icons/player_previous_icon.png",
           //     onPress: null,
@@ -145,8 +143,8 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
                   ? "assets/icons/player_play_icon.png"
                   : "assets/icons/player_pause_icon.png",
               onPress: () => widget.onPlayCallback(widget.playing),
-              size: Size(55, 55),
-              padding: EdgeInsets.all(0)),
+              size: const Size(55, 55),
+              padding: const EdgeInsets.all(0)),
           // SizedBox(
           //   width: 20,
           // ),
@@ -154,11 +152,11 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
           //     icon: "assets/icons/player_next_icon.png",
           //     size: Size(20, 20),
           //     padding: EdgeInsets.all(15)),
-          Spacer(),
+          const Spacer(),
           _playerBtnW(
               icon: "assets/icons/player_list_icon.png",
               onPress: widget.onListCallback,
-              size: Size(40, 40))
+              size: const Size(40, 40))
         ],
       ),
     );
@@ -172,7 +170,7 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
     return GestureDetector(
       onTap: onPress,
       child: Container(
-        padding: padding ?? EdgeInsets.all(5),
+        padding: padding ?? const EdgeInsets.all(5),
         child: Image.asset(
           icon,
           width: size.width,
@@ -191,10 +189,7 @@ class _ButtonsBoardWState extends State<_ButtonsBoardW>
 
 class _SliderW extends StatefulWidget {
   _SliderW(
-      {super.key,
-      required this.callback,
-      required this.secs,
-      required this.totalSecs});
+      {required this.callback, required this.secs, required this.totalSecs});
   int secs;
   int totalSecs;
 
@@ -263,8 +258,8 @@ class _SliderWState extends State<_SliderW> {
         SliderTheme(
             data: SliderTheme.of(context).copyWith(
               trackHeight: 1, // 轨道高度
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
-              overlayShape: RoundSliderOverlayShape(
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+              overlayShape: const RoundSliderOverlayShape(
                 overlayRadius: 10, // 滑块外圈大小
               ),
             ),
@@ -295,7 +290,7 @@ class _SliderWState extends State<_SliderW> {
           children: [
             Container(
               // width: 10,
-              padding: EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.only(left: 10),
               child: Text(
                 formatSeconds(_secs),
                 style: AppTextStyle.font12,
@@ -303,7 +298,7 @@ class _SliderWState extends State<_SliderW> {
             ),
             Container(
               // width: 10,
-              padding: EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 10),
               child: Text(
                 formatSeconds(_totalSecs),
                 style: AppTextStyle.font12,

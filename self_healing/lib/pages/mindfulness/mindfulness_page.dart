@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
-import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
+import 'package:self_healing/pages/mindfulness/mindfulness_service.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
-import 'package:self_healing/pages/mindfulness/widgets/list_sheet/list_sheet.dart';
-import 'package:self_healing/pages/mindfulness/widgets/list_sheet/list_sheet_controller.dart';
+import 'package:self_healing/pages/mindfulness/widgets/list_sheet.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_control_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_info_w.dart';
 import 'package:self_healing/pages/mindfulness/widgets/mindfulness_tips_w.dart';
@@ -14,17 +12,15 @@ import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/widgets/brightness/image.dart';
 import 'package:self_healing/widgets/dialog/alert.dart';
-import 'package:tuple/tuple.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
-class MindfulnessPage extends GetView<MindfulnessController>
-    implements MindfulnessControlWDelegate, ListSheetDelegate {
-  MindfulnessPage({super.key}) {
-    Get.put(MindfulnessController());
-  }
-  ListSheetController? sheetController;
+class MindfulnessPage extends GetView<MindfulnessService>
+    implements MindfulnessControlWDelegate {
+  const MindfulnessPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    MindfulnessService.shared();
     return Scaffold(
       body: SafeArea(
           child: Container(
@@ -34,14 +30,15 @@ class MindfulnessPage extends GetView<MindfulnessController>
         child: Stack(
           children: [
             Obx(() {
-              "${controller.forceUpdate.value}";
               return Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  MindfulnessTips(tipsText: "允许一切发生\n", onPress: () {}),
-                  SizedBox(
+                  MindfulnessTips(onPress: () {
+                    Get.toNamed(Routes.mindfulnessTips);
+                  }),
+                  const SizedBox(
                     height: 20,
                   ),
                   MindfulnessInfoW(
@@ -52,17 +49,16 @@ class MindfulnessPage extends GetView<MindfulnessController>
                     cover: controller.media.value.cover,
                     loveCallback: onPressMainLove,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Obx(() {
-                    "force build ${controller.mediaController.forceUpdate}";
                     return MindfulnessControlW(
-                        secs: controller.mediaController.secs,
-                        totalSecs: controller.mediaController.totalSecs,
+                        secs: controller.mediaController.secs.value,
+                        totalSecs: controller.mediaController.totalSecs.value,
                         mode: controller.mediaController.mode.value.raw,
                         playing: controller.mediaController.isPlaying.value,
                         delegate: this);
                   }),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   )
                 ],
@@ -72,7 +68,7 @@ class MindfulnessPage extends GetView<MindfulnessController>
                 right: 0,
                 top: 10,
                 child: PopupMenuButton<int>(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   onSelected: onPressMore,
                   icon: const BrightnessIcon(
                     src: "assets/icons/more_icon.png",
@@ -80,13 +76,19 @@ class MindfulnessPage extends GetView<MindfulnessController>
                   ),
                   itemBuilder: (context) {
                     return <PopupMenuEntry<int>>[
-                      const PopupMenuItem<int>(
+                      PopupMenuItem<int>(
                         value: 0,
-                        child: Text('更多正念'),
+                        child: Text(
+                          '社区资源',
+                          style: AppTextStyle.font18,
+                        ),
                       ),
-                      const PopupMenuItem<int>(
+                      PopupMenuItem<int>(
                         value: 1,
-                        child: Text('新建正念'),
+                        child: Text(
+                          '新建正念',
+                          style: AppTextStyle.font18,
+                        ),
                       ),
                     ];
                   },
@@ -114,21 +116,18 @@ class MindfulnessPage extends GetView<MindfulnessController>
   onPressMainLove(bool loved) {
     log_("press loved :${!loved}");
     if (loved) {
-      showAlert(Get.context!, title: "提示", content: "取消红心将会把当前资源从播放列表移除",
+      showPlainAlert(Get.context!, title: "提示", content: "取消红心将会把当前资源从播放列表移除",
           sureCallback: () {
         controller.setupLoved(controller.media.value, !loved);
-        controller.forceUpdate.value += 1;
       });
     } else {
       controller.setupLoved(controller.media.value, !loved);
-      controller.forceUpdate.value += 1;
     }
   }
 
   @override
   void mediaControlListOnCallback() {
-    sheetController = showListSheet(context: Get.context!, delegate: this);
-    sheetController?.models.value = controller.mediaList.value;
+    showListSheet(context: Get.context!);
   }
 
   @override
@@ -144,40 +143,5 @@ class MindfulnessPage extends GetView<MindfulnessController>
   @override
   void mediaControlSliderValOnCallback(double destinationVal) {
     controller.mediaController.setupVal(destinationVal);
-  }
-
-  @override
-  listSheetOnPressLove(ListSheet sheet, int index, bool isLoved) {
-    int time = DateTime.now().millisecondsSinceEpoch;
-
-    task() {
-      controller.removeMediaAlertTime = time;
-      controller.setupLoved(sheetController!.models.value[index], !isLoved);
-      sheetController?.models.value = controller.mediaList.value;
-      sheetController?.forceUpdate.value += 1;
-      controller.forceUpdate.value += 1;
-    }
-
-    if (time > controller.removeMediaAlertTime + 1000 * 5) {
-      // 超过5s
-
-      showAlert(Get.context!, title: "提示", content: "取消红心将会把当前资源从播放列表移除",
-          sureCallback: () {
-        task();
-      });
-    } else {
-      task();
-    }
-  }
-
-  @override
-  listSheetItemOnPress(ListSheet sheet, int index) {
-    controller.setupPlayIndex(index: index);
-    sheetController?.forceUpdate.value += 1;
-  }
-
-  @override
-  listSheetItemReorder(ListSheet sheet, List<MindfulnessMediaModel> newModels) {
-    controller.setupReorder(newModels);
   }
 }

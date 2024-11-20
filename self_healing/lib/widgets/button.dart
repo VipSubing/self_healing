@@ -5,7 +5,7 @@ import 'package:self_healing/basic/globals.dart';
 import 'package:self_healing/widgets/brightness/builder.dart';
 
 class SelectedButton extends StatelessWidget {
-  SelectedButton(
+  const SelectedButton(
       {super.key,
       required this.isSelected,
       required this.child,
@@ -25,8 +25,8 @@ class SelectedButton extends StatelessWidget {
               backgroundColor: isSelected
                   ? Theme.of(context).primaryColor
                   : (isDark
-                      ? Color.fromARGB(255, 22, 22, 22)
-                      : Color.fromARGB(255, 233, 233, 233))),
+                      ? const Color.fromARGB(255, 22, 22, 22)
+                      : const Color.fromARGB(255, 233, 233, 233))),
           child: child);
     });
   }
@@ -49,7 +49,7 @@ class MeTextButton extends StatelessWidget {
   final Color color;
   final TextStyle? textStyle;
 
-  MeTextButton.one(
+  const MeTextButton.one(
       {super.key,
       required this.onPress,
       required this.title,
@@ -66,7 +66,7 @@ class MeTextButton extends StatelessWidget {
       required this.size,
       this.cornerRadius,
       this.textStyle})
-      : backgroundColor = Color.fromARGB(255, 233, 233, 233),
+      : backgroundColor = const Color.fromARGB(255, 233, 233, 233),
         color = Colors.black;
 
   @override

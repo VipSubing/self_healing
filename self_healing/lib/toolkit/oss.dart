@@ -24,7 +24,7 @@ class Oss {
     return _shared!;
   }
 
-  Oss._internal() {}
+  Oss._internal();
   int index = 0;
   bool registed = false;
   String bucket = "self-healing-1309961435";
@@ -131,10 +131,10 @@ class Oss {
     //CosTransferManger transferManager = Cos().getTransferManger("newRegion");
     // 存储桶名称，由 bucketname-appid 组成，appid 必须填入，可以在 COS 控制台查看存储桶名称。 https://console.cloud.tencent.com/cos5/bucket
     //若存在初始化分块上传的 UploadId，则赋值对应的 uploadId 值用于续传；否则，赋值 null
-    String? _uploadId;
+    String? uploadId;
 
     // 上传成功回调
-    _successCallBack(Map<String?, String?>? header, CosXmlResult? result) {
+    successCallBack0(Map<String?, String?>? header, CosXmlResult? result) {
       // todo 上传成功后的逻辑
       if (successCallBack != null) {
         successCallBack(header, result);
@@ -142,7 +142,7 @@ class Oss {
     }
 
     //上传失败回调
-    _failCallBack(clientException, serviceException) {
+    failCallBack0(clientException, serviceException) {
       // todo 上传失败后的逻辑
       if (failCallBack != null) {
         failCallBack(clientException, serviceException);
@@ -152,15 +152,15 @@ class Oss {
     //初始化分块完成回调
     initMultipleUploadCallback(String bucket, String cosKey, String uploadId) {
       //用于下次续传上传的 uploadId
-      _uploadId = uploadId;
+      uploadId = uploadId;
     }
 
     //开始上传
     TransferTask transferTask = await transferManager.upload(bucket, cosPath,
         filePath: srcPath,
         byteArr: byteArr,
-        uploadId: _uploadId,
-        resultListener: ResultListener(_successCallBack, _failCallBack),
+        uploadId: uploadId,
+        resultListener: ResultListener(successCallBack0, failCallBack0),
         stateCallback: stateCallback,
         progressCallBack: progressCallBack,
         initMultipleUploadCallback: initMultipleUploadCallback);
@@ -193,8 +193,8 @@ class Oss {
     final iv = IV.fromBase64("dTAnolx8QoxyNVpUXJi3hA==");
     final encrypter = Encrypter(AES(key));
 
-    final new_encrypted = Encrypted.fromBase64(text);
-    final decrypted = encrypter.decrypt(new_encrypted, iv: iv);
+    final newEncrypted = Encrypted.fromBase64(text);
+    final decrypted = encrypter.decrypt(newEncrypted, iv: iv);
 
     String cosId = decrypted.split("*").first; //永久密钥 secretId
     String cosKey = decrypted.split("*").last; //永久密钥 secretKey

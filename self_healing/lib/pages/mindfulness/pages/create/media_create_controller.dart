@@ -3,9 +3,7 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
-import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/toolkit/oss.dart';
 
 class MediaCreateController extends GetxController {
@@ -29,9 +27,9 @@ class MediaCreateController extends GetxController {
       isCommitEnable.value = (name.value != null &&
               mediaSrc.value != null &&
               type.value != null) &&
-          name.value!.length > 0 &&
-          mediaSrc.value!.length > 0 &&
-          type.value!.length > 0;
+          name.value!.isNotEmpty &&
+          mediaSrc.value!.isNotEmpty &&
+          type.value!.isNotEmpty;
     });
 
     audioPlayer.onDurationChanged.listen((Duration d) {

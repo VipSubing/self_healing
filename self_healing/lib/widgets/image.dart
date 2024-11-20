@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:self_healing/basic/globals.dart';
@@ -14,29 +15,17 @@ class NetImage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return BrightnessBuilder(builder: (context, isDark) {
-      final color = Color.fromARGB(255, 200, 200, 200);
+      final color = const Color.fromARGB(255, 200, 200, 200);
       return Container(
         width: width,
         height: height,
         color: verifySrc(src) ? null : (isDark ? invertColor(color) : color),
         child: verifySrc(src)
             ? Center(
-                child: FutureBuilder(
-                  future: DefaultCacheManager().getSingleFile(src!),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<File> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      return Image.file(
-                        snapshot.data!,
-                        fit: BoxFit.contain,
-                      );
-                    } else {
-                      return SizedBox();
-                    }
-                  },
-                ),
+                child: CachedNetworkImage(
+                imageUrl: src!,
               )
+                )
             : null,
       );
     });

@@ -1,16 +1,15 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
-import 'package:self_healing/basic/const.dart';
-import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
+// import 'package:self_healing/basic/const.dart';
+import 'package:self_healing/pages/mindfulness/mindfulness_service.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import 'package:self_healing/toolkit/extension/list.dart';
+import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/toolkit/oss.dart';
 
 class MediaShopController extends GetxController {
-  Rx<List<MindfulnessMediaModel>> list = () {
-    var rx = Rx<List<MindfulnessMediaModel>>([]);
-    rx.equalityRebuild = true;
-    return rx;
-  }();
+  Rx<List<MindfulnessMediaModel>> list = Rx<List<MindfulnessMediaModel>>([]);
   List<MindfulnessMediaModel> totalList = [];
   int page = 0;
   bool hasMore = false;
@@ -22,14 +21,33 @@ class MediaShopController extends GetxController {
     hasMore = result.item2;
 
     if (page == 0) {
-      this.totalList.clear();
+      totalList.clear();
     }
     final jsons = result.item1;
-    this.totalList.addAll(
+    totalList.addAll(
         jsons.map((item) => MindfulnessMediaModel.fromJson(item)).toList());
 
-    this.list.value = this.totalList;
+    list.value = totalList;
     this.page = page;
+  }
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    log_("MediaShopController onInit");
+  }
+
+  @override
+  onReady() {
+    super.onReady();
+    log_("MediaShopController onReady");
+  }
+
+  @override
+  onClose() {
+    super.onClose();
+    log_("MediaShopController onClose");
   }
 
   search(String text) {
@@ -42,12 +60,11 @@ class MediaShopController extends GetxController {
   }
 
   cancleSearch() {
-    this.list.value = this.totalList;
+    list.value = totalList;
   }
 
   addToList(MindfulnessMediaModel media, bool isLoved) {
-    // Get.find<MindfulnessController>().setupAddPlay(media);
-    Get.find<MindfulnessController>().setupLoved(media, isLoved);
+    Get.find<MindfulnessService>().setupLoved(media, isLoved);
     forceUpdate.value += 1;
   }
 }

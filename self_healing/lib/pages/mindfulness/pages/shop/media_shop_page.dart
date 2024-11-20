@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
-// import 'package:flutter_easyrefresh/flutter_easyrefresh.dart';
 import 'package:self_healing/basic/app_style.dart';
 import 'package:self_healing/basic/globals.dart';
-import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
+import 'package:self_healing/pages/mindfulness/mindfulness_service.dart';
 import 'package:self_healing/pages/mindfulness/models/mindfulness_media_model.dart';
 import 'package:self_healing/pages/mindfulness/pages/shop/media_shop_controller.dart';
 import 'package:self_healing/routes/routes.dart';
 import 'package:self_healing/toolkit/log.dart';
 import 'package:self_healing/widgets/brightness/builder.dart';
-import 'package:self_healing/widgets/brightness/container.dart';
 import 'package:self_healing/widgets/brightness/image.dart';
 import 'package:self_healing/widgets/brightness/text.dart';
 import 'package:self_healing/widgets/dialog/alert.dart';
@@ -20,17 +16,35 @@ import 'package:self_healing/widgets/image.dart';
 import 'package:self_healing/widgets/love.dart';
 import 'package:self_healing/widgets/tag_w.dart';
 
-class MediaShopPage extends GetView<MediaShopController> {
-  MediaShopPage({super.key}) {
-    Get.delete<MediaShopController>();
-    var controller = MediaShopController();
-    Get.put(controller);
+class MediaShopPage extends StatefulWidget {
+  MediaShopPage({super.key});
 
+  @override
+  State<MediaShopPage> createState() => _MediaShopPageState();
+}
+
+class _MediaShopPageState extends State<MediaShopPage> {
+  final refreshController = EasyRefreshController();
+
+  final searchController = TextEditingController();
+
+  final playerController = Get.find<MindfulnessService>();
+  MediaShopController get controller => Get.find<MediaShopController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Get.put(MediaShopController());
     controller.request(controller.page);
   }
-  final refreshController = EasyRefreshController();
-  final searchController = TextEditingController();
-  final playerController = Get.find<MindfulnessController>();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Get.delete<MediaShopController>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,18 +101,20 @@ class MediaShopPage extends GetView<MediaShopController> {
                         )))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Expanded(
               child: Obx(() {
                 "${controller.forceUpdate}";
                 "${playerController.mediaList}";
+
                 return EasyRefresh(
                   controller: refreshController,
-                  // onRefresh: () async {
-                  //   controller.request(controller.page);
-                  // },
+                  onLoad: () async {
+                    // await controller.request(controller.page + 1);
+                    refreshController.finishLoad(noMore: !controller.hasMore);
+                  },
                   child: ListView.builder(
                     itemExtent: 80,
                     itemCount: controller.list.value.length,
@@ -134,7 +150,7 @@ class MediaShopPage extends GetView<MediaShopController> {
 
       if (time > controller.removeMediaAlertTime + 1000 * 5) {
         // 超过5s
-        showAlert(Get.context!, title: "提示", content: "取消红心将会把当前资源从播放列表移除",
+        showPlainAlert(Get.context!, title: "提示", content: "取消红心将会把当前资源从播放列表移除",
             sureCallback: () {
           controller.addToList(media, !isLoved);
         });
@@ -192,7 +208,7 @@ class _ItemWidget extends StatelessWidget {
               ),
               _textW(context, model.name, formatMinutes(model.duration),
                   model.type.name, model.isPlaying),
-              Spacer(),
+              const Spacer(),
               LoveWidget(
                 width: 30,
                 height: 30,

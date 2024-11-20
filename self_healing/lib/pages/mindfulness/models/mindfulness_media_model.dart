@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:self_healing/basic/app_prefference.dart';
-import 'package:self_healing/pages/mindfulness/mindfulness_controller.dart';
-import 'package:self_healing/toolkit/log.dart';
+import 'package:self_healing/pages/mindfulness/mindfulness_service.dart';
 
 part 'mindfulness_media_model.g.dart';
 
@@ -69,7 +67,7 @@ enum MindfulnessMediaType {
   walk("行走"), //行走
   breathe("呼吸"), //呼吸
   diet("饮食"), //饮食
-  compassion("慈悲心") ,//慈悲心
+  compassion("慈悲心"), //慈悲心
   other("其他"), //其他
   ;
 
@@ -79,7 +77,7 @@ enum MindfulnessMediaType {
 
 extension Ex on MindfulnessMediaModel {
   bool get isLoved {
-    final controller = Get.find<MindfulnessController>();
+    final controller = Get.find<MindfulnessService>();
     var list = controller.mediaList.value;
     for (var item in list) {
       if (item.src == src) {
@@ -90,7 +88,7 @@ extension Ex on MindfulnessMediaModel {
   }
 
   bool get isPlaying {
-    final controller = Get.find<MindfulnessController>();
+    final controller = Get.find<MindfulnessService>();
     return controller.media.value.src == src;
   }
 }

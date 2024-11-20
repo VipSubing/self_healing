@@ -28,7 +28,7 @@ class Guide1Controller extends GetxController {
     LevelOfSpiritModel(
         name: "良好", color: const Color.fromARGB(255, 164, 243, 168), level: 0),
     LevelOfSpiritModel(
-        name: "抑郁", color: Color.fromARGB(255, 182, 179, 178), level: 1)
+        name: "抑郁", color: const Color.fromARGB(255, 182, 179, 178), level: 1)
   ];
 
   final somatizationList = [
@@ -41,7 +41,7 @@ class Guide1Controller extends GetxController {
     LevelOfSpiritModel(
         name: "良好", color: const Color.fromARGB(255, 164, 243, 168), level: 0),
     LevelOfSpiritModel(
-        name: "惊恐", color: Color.fromARGB(255, 227, 39, 6), level: 1)
+        name: "惊恐", color: const Color.fromARGB(255, 227, 39, 6), level: 1)
   ];
 
   final String introducesAnxiety = "焦虑整体的状况，通过专业自评工具或者医生诊断给出";

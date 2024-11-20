@@ -60,7 +60,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
         requestType: RequestType.image,
       ),
     );
-    if (result != null && result.length > 0) {
+    if (result != null && result.isNotEmpty) {
       controller.coverSrc.value = (await result.first.file)?.path;
     }
   }
@@ -79,7 +79,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("创建作品"),
+          title: const Text("创建作品"),
         ),
         body: LayoutBuilder(builder: (context, constrains) {
           logDebug(
@@ -95,14 +95,14 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 40,
                       ),
                       Text(
                         "名称",
                         style: AppTextStyle.font16.weight600(),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       TextField(
@@ -121,7 +121,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                                   AppStyle.imgCornerRadius)),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Obx(() {
@@ -132,7 +132,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                           onTap: onMediaPicker,
                         );
                       }),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
@@ -158,7 +158,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                           );
                         });
                       }),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Obx(() {
@@ -168,17 +168,17 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                           src: controller.coverSrc.value,
                         );
                       }),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
                         "详情描述(可选)",
                         style: AppTextStyle.font16.weight600(),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 7,
                       ),
-                      Container(
+                      SizedBox(
                         height: 180,
                         child: TextField(
                           onChanged: (value) => controller.description.value,
@@ -200,7 +200,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 90,
                       ),
                     ],
@@ -216,7 +216,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
                       return ElevatedButton(
                           onPressed:
                               controller.isCommitEnable.value ? onCommit : null,
-                          child: Text("提交"));
+                          child: const Text("提交"));
                     }))
               ],
             ),
@@ -229,8 +229,7 @@ class MediaCreatePage extends GetView<MediaCreateController> {
 
 class _MediaAddWidget extends StatelessWidget {
   const _MediaAddWidget(
-      {super.key,
-      this.durationText,
+      {this.durationText,
       required this.isEmpty,
       required this.onTap});
   final bool isEmpty;
@@ -250,14 +249,14 @@ class _MediaAddWidget extends StatelessWidget {
                   width: 1, color: AppStyle.borderLineColor(isDark))),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text("音频"),
-              SizedBox(
+              const Text("音频"),
+              const SizedBox(
                 height: 5,
               ),
-              isEmpty ? Icon(Icons.add) : Text(durationText ?? "")
+              isEmpty ? const Icon(Icons.add) : Text(durationText ?? "")
             ],
           ),
         ),
@@ -268,7 +267,7 @@ class _MediaAddWidget extends StatelessWidget {
 
 class _CoverAddWidget extends StatelessWidget {
   const _CoverAddWidget(
-      {super.key, this.src, required this.isEmpty, required this.onTap});
+      {this.src, required this.isEmpty, required this.onTap});
   final bool isEmpty;
   final String? src;
   final Function() onTap;

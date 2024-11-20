@@ -1,5 +1,4 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/material.dart';
 
 abstract class AudioHandlerDelegate {
   Future audioServicePlay();
@@ -26,7 +25,7 @@ class MyAudioHandler extends BaseAudioHandler
 
   MyAudioHandler._internal();
   resetItem(MediaItem item) {
-    MyAudioHandler.shared.mediaItem.add(item);
+    mediaItem.add(item);
   }
 
   resetAudioServiceState(
