@@ -49,7 +49,7 @@ class _MediaShopPageState extends State<MediaShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("更多正念")),
+      appBar: AppBar(title: const Text("社区资源")),
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.only(
@@ -242,7 +242,7 @@ class _ItemWidget extends StatelessWidget {
           Text(
             name,
             maxLines: 1,
-            style: AppTextStyle.font14,
+            style: AppTextStyle.font18,
           ),
           const SizedBox(
             height: 5,

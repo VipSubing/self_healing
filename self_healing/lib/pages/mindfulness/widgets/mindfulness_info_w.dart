@@ -5,7 +5,8 @@ import 'package:self_healing/widgets/tag_w.dart';
 
 class MindfulnessInfoW extends StatefulWidget {
   const MindfulnessInfoW(
-      {super.key, this.cover,
+      {super.key,
+      this.cover,
       required this.name,
       required this.time,
       required this.tag,
@@ -85,7 +86,7 @@ class _MindfulnessInfoWState extends State<MindfulnessInfoW>
             name,
             maxLines: 1,
             overflow: TextOverflow.clip,
-            style: AppTextStyle.font18.weight700(),
+            style: AppTextStyle.font20.weight700(),
           ),
         ),
         const SizedBox(

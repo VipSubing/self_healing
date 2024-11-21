@@ -83,6 +83,9 @@ class AppStyle {
         appBarTheme: _appBarTheme(false),
         scaffoldBackgroundColor: _backgroundColor(false),
         useMaterial3: true,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: AppStyle.themeColor,
+        ),
       );
       return theme;
     })();
@@ -103,6 +106,9 @@ class AppStyle {
         appBarTheme: _appBarTheme(true),
         scaffoldBackgroundColor: _backgroundColor(true),
         useMaterial3: true,
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: AppStyle.themeColor,
+        ),
       );
       return theme;
     })();

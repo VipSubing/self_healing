@@ -188,7 +188,7 @@ class _ItemWidget extends StatelessWidget {
           Text(
             name,
             maxLines: 1,
-            style: AppTextStyle.font14.copyWith(color: color),
+            style: AppTextStyle.font16.copyWith(color: color),
           ),
           const SizedBox(
             height: 5,
