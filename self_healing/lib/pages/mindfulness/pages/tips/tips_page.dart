@@ -101,8 +101,7 @@ class _TipsPageState extends State<TipsPage> {
               top: 20,
               left: AppStyle.horizontalPadding,
               right: AppStyle.horizontalPadding),
-          child: Expanded(
-              child: ReorderableListView(
+          child: ReorderableListView(
             children: list.mapE((model, i) {
               return _TipsItem(
                   key: ValueKey(i),
@@ -120,7 +119,7 @@ class _TipsPageState extends State<TipsPage> {
               });
               MindfulessStore.shared.tips = list;
             },
-          )),
+          ),
         );
       })),
     );
